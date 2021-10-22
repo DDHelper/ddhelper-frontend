@@ -3,19 +3,18 @@ import React, {
 } from 'react';
 import './App.css';
 import {
-  Link,
-  // LinkProps,
+  BrowserRouter,
   Route,
   Switch,
   useHistory,
   useRouteMatch,
 } from "react-router-dom";
-import { FormWithHookForm } from './components/auth'
 import {
   Grid,
   Paper,
 } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
+import AuthView from "./components/auth";
 
 function App() {
   /*
@@ -39,27 +38,32 @@ function App() {
   );
   */
   return (
-    <Switch>
-      <Suspense
-        fallback={
-          <Grid container direction="column" spacing={3}>
-            <Grid item>
-              <Skeleton variant="rectangular" width="30%" height={30} />
+    <BrowserRouter>
+      <Switch>
+        <Suspense
+          fallback={
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <Skeleton variant="rectangular" width="30%" height={30} />
+              </Grid>
+              <Grid item>
+                <Skeleton variant="rectangular" width="90%" height={200} />
+              </Grid>
+              <Grid item>
+                <Skeleton variant="rectangular" width="90%" height={200} />
+              </Grid>
             </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" width="90%" height={200} />
-            </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" width="90%" height={200} />
-            </Grid>
-          </Grid>
-        }
-      >
-        <Route path="/auth/login" exact>
-          <AuthView />
-        </Route>
-      </Suspense>
-    </Switch>
+          }
+        >
+          <Route path="/auth/login" exact>
+            <AuthView />
+          </Route>
+          <Route path="/auth/register" exact>
+            <AuthView />
+          </Route>
+        </Suspense>
+      </Switch>
+    </BrowserRouter>
   );
 }
 

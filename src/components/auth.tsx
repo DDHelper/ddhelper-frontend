@@ -1,9 +1,9 @@
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
-import { Button, Paper, Box } from "@mui/material";
+import { Button, Paper, Box, Stack } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
-const FormWithHookForm = () => {
+const FormWithHookForm: React.FC<{}> = () => {
   const { handleSubmit, reset, control } = useForm();
   const onSubmit = (data: any) => {
     console.log(data);
@@ -25,38 +25,40 @@ const FormWithHookForm = () => {
           sx={{ mt: 1 }}
         >
           <form>
-            <Controller
-              name={"uid"}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  onChange={onChange}
-                  value={value}
-                  label={"User ID"} />
-              )}
-            />
-            <Controller
-              name={"passwd"}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  onChange={onChange}
-                  value={value}
-                  label={"Password"} />
-              )}
-            />
-            <Button
-              onClick={handleSubmit(onSubmit)}
-            >
-              Submit
-            </Button>
-            <Button onClick={() => reset()} variant={"outlined"}>Reset</Button>
+            <Stack spacing={2}>
+              <Controller
+                name={"uid"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    onChange={onChange}
+                    value={value}
+                    label={"User ID"} />
+                )}
+              />
+              <Controller
+                name={"passwd"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    onChange={onChange}
+                    value={value}
+                    label={"Password"} />
+                )}
+              />
+              <Button
+                onClick={handleSubmit(onSubmit)}
+              >
+                Submit
+              </Button>
+              <Button onClick={() => reset()} variant={"outlined"}>Reset</Button>
+            </Stack>
           </form>
         </Box>
       </Box>
@@ -64,5 +66,10 @@ const FormWithHookForm = () => {
   );
 };
 
+const AuthView = () => {
+  return (
+    <FormWithHookForm />
+  );
+};
 
-default export AuthView
+export default AuthView;
