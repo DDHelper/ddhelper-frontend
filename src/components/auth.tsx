@@ -1,12 +1,17 @@
-import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
-import { Button, Paper, Box, Stack } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import TextField from '@mui/material/TextField';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Button, Paper, Box, Stack } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
 
 const FormWithHookForm: React.FC<{}> = () => {
   const { handleSubmit, reset, control } = useForm();
   const onSubmit = (data: any) => {
     console.log(data);
+    let url: string = 'http://yapi.phystack.top/mock/11/auth/login';
+    let config = {};
+    const response = axios.post(url, data, config);
+    console.log(response)
   };
 
   return (
@@ -20,36 +25,36 @@ const FormWithHookForm: React.FC<{}> = () => {
         }}
       >
         <Box
-          component="form"
+          component='form'
           noValidate
           sx={{ mt: 1 }}
         >
           <form>
             <Stack spacing={2}>
               <Controller
-                name={"uid"}
+                name={'username'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
-                    margin="normal"
+                    margin='normal'
                     required
                     fullWidth
                     onChange={onChange}
                     value={value}
-                    label={"User ID"} />
+                    label={'User ID'} />
                 )}
               />
               <Controller
-                name={"passwd"}
+                name={'password'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
-                    margin="normal"
+                    margin='normal'
                     required
                     fullWidth
                     onChange={onChange}
                     value={value}
-                    label={"Password"} />
+                    label={'Password'} />
                 )}
               />
               <Button
@@ -57,7 +62,7 @@ const FormWithHookForm: React.FC<{}> = () => {
               >
                 Submit
               </Button>
-              <Button onClick={() => reset()} variant={"outlined"}>Reset</Button>
+              <Button onClick={() => reset()} variant={'outlined'}>Reset</Button>
             </Stack>
           </form>
         </Box>
@@ -66,9 +71,12 @@ const FormWithHookForm: React.FC<{}> = () => {
   );
 };
 
+
 const AuthView = () => {
   return (
-    <FormWithHookForm />
+    <div>
+      <FormWithHookForm />
+    </div>
   );
 };
 
