@@ -1,8 +1,9 @@
 import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
 import {
+  LoginValues,
 
-} from apiModel;
+} from './apiModels';
 
 /**
  * Access api endpoints.
@@ -36,34 +37,15 @@ export function useapi(token?: string) {
   }, [token]);
 
   return {
-    postLoginLocal: useCallback(
-      async (values: LoginValues): Promise<LoginLocalApiReturn> =>
-        (await axios.post<LoginLocalApiReturn>('/auth/login', values)).data,
+    postLogin: useCallback(
+      async (values: LoginValues): Promise<LoginApiReturn> =>
+        (await axios.post<LoginApiReturn>('/auth/login', values)).data,
       [axios]
     ),
-    postRegisterLocal: useCallback(
-      async (values: RegisterValues): Promise<LoginLocalApiReturn> =>
-        (await axios.post<LoginLocalApiReturn>('/auth/local/register', values))
+    postRegister: useCallback(
+      async (values: RegisterValues): Promise<LoginApiReturn> =>
+        (await axios.post<LoginApiReturn>('/auth/register', values))
           .data,
-      [axios]
-    ),
-    getRedirectConnectLoginUrl: useCallback(
-      (service: string) =>
-        `${axios.getUri({
-          url: `${process.env.REACT_APP_STRAPI_BASE}/connect/${service}`,
-        })}`,
-      [axios]
-    ),
-    getConnectCallback: useCallback(
-      async (
-        provider: string,
-        searchString: string
-      ): Promise<LoginLocalApiReturn> =>
-        (
-          await axios.get<LoginLocalApiReturn>(
-            `/auth/${provider}/callback${searchString}`
-          )
-        ).data,
       [axios]
     ),
     getUserMe: useCallback(
@@ -137,134 +119,6 @@ export function useapi(token?: string) {
             passwordConfirmation,
           })
         ).data,
-      [axios]
-    ),
-    getSekaiProfileMe: useCallback(
-      async (token?: string): Promise<SekaiProfileModel> =>
-        (
-          await axios.get<SekaiProfileModel>(
-            '/sekai-profiles/me',
-            token
-              ? {
-                headers: { authorization: `Bearer ${token}` },
-              }
-              : {}
-          )
-        ).data,
-      [axios]
-    ),
-    postSekaiProfileVerify: useCallback(
-      async (
-        userid: string
-      ): Promise<{
-        id: number;
-        token: string;
-      }> =>
-        (
-          await axios.post<{
-            id: number;
-            token: string;
-          }>('/sekai-profiles/verify', {
-            userid,
-          })
-        ).data,
-      [axios]
-    ),
-    postSekaiProfileConfirm: useCallback(
-      async (id: number, userid: string): Promise<{ profile: IUserProfile }> =>
-        (
-          await axios.post<{ profile: IUserProfile }>(
-            `/sekai-profiles/${id}/confirm`,
-            {
-              userid,
-            }
-          )
-        ).data,
-      [axios]
-    ),
-    putSekaiProfileUpdate: useCallback(
-      async (id: number): Promise<{ profile: IUserProfile }> =>
-        (
-          await axios.put<{ profile: IUserProfile }>(
-            `/sekai-profiles/${id}/update`
-          )
-        ).data,
-      [axios]
-    ),
-    getLanguages: useCallback(
-      async (): Promise<LanguageModel[]> =>
-        (await axios.get<LanguageModel[]>('/languages?_sort=id:ASC')).data,
-      [axios]
-    ),
-    getUserMetadataMe: useCallback(
-      async (token?: string): Promise<UserMetadatumModel> =>
-        (
-          await axios.get<UserMetadatumModel>(
-            '/user-metadata/me',
-            token
-              ? {
-                headers: { authorization: `Bearer ${token}` },
-              }
-              : {}
-          )
-        ).data,
-      [axios]
-    ),
-    getSekaiCurrentEvent: useCallback(
-      async (): Promise<SekaiCurrentEventModel> =>
-        (await axios.get<SekaiCurrentEventModel>('/sekai-current-event')).data,
-      [axios]
-    ),
-    getSekaiProfileEventRecordMe: useCallback(
-      async (eventId?: number): Promise<SekaiProfileEventRecordModel[]> =>
-        (
-          await axios.get<SekaiProfileEventRecordModel[]>(
-            '/sekai-profile-event-records/me',
-            {
-              params: eventId
-                ? {
-                  eventId,
-                }
-                : {},
-            }
-          )
-        ).data,
-      [axios]
-    ),
-    postSekaiProfileEventRecord: useCallback(
-      async (eventId: number) =>
-        (await axios.post('/sekai-profile-event-records/record', { eventId }))
-          .data,
-      [axios]
-    ),
-    putSekaiCardList: useCallback(
-      async (id: number, cardList: ITeamCardState[]) =>
-        (await axios.put(`/sekai-profiles/${id}/cardlist`, cardList)).data,
-      [axios]
-    ),
-    deleteSekaiCardList: useCallback(
-      async (id: number, cardIds: number[]) => {
-        await axios.delete(`/sekai-profiles/${id}/cardlist`, {
-          params: {
-            cards: cardIds,
-          },
-        });
-      },
-      [axios]
-    ),
-    putSekaiDeckList: useCallback(
-      async (id: number, deckList: ITeamBuild[]) =>
-        (await axios.put(`/sekai-profiles/${id}/decklist`, deckList)).data,
-      [axios]
-    ),
-    deleteSekaiDeckList: useCallback(
-      async (id: number, deckIds: number[]) => {
-        await axios.delete(`/sekai-profiles/${id}/decklist`, {
-          params: {
-            decks: deckIds,
-          },
-        });
-      },
       [axios]
     ),
     getAnnouncements: useCallback(
@@ -409,79 +263,6 @@ export function useapi(token?: string) {
         ).data,
       [axios]
     ),
-    getTranslations: useCallback(
-      async (page: number, limit: number, params?: { [key: string]: any }) =>
-        (
-          await axios.get<TranslationModel[]>('/translations', {
-            params: {
-              _limit: limit,
-              _start: page * limit,
-              ...(params || {}),
-            },
-          })
-        ).data,
-      [axios]
-    ),
-    getTranslationById: useCallback(
-      async (id: number) =>
-        (await axios.get<TranslationModel>(`/translations/${id}`)).data,
-      [axios]
-    ),
-    getTranslationBySlug: useCallback(
-      async (slug: string, type: 'source' | 'target', params?: any) =>
-        (
-          await axios.get<TranslationModel[]>(
-            `/translations/slug/${type}/${slug}`,
-            {
-              params,
-            }
-          )
-        ).data,
-      [axios]
-    ),
-    postTranslation: useCallback(
-      async (
-        user: UserMetadatumModel,
-        sourceSlug: string,
-        sourceLang: number,
-        target: any,
-        targetLang: number
-      ) =>
-        (
-          await axios.post<TranslationModel>('/translations', {
-            user: user.id,
-            sourceSlug,
-            sourceLang,
-            target,
-            targetLang,
-          })
-        ).data,
-      [axios]
-    ),
-    putTranslationId: useCallback(
-      async (
-        id: number | string,
-        body: { target?: any; targetLang?: number; isFin?: boolean }
-      ) =>
-        (await axios.put<TranslationModel>(`/translations/${id}`, body)).data,
-      [axios]
-    ),
-    getTranslationCount: useCallback(
-      async (params?: any) =>
-        (await axios.get<number>('/translations/count', { params })).data,
-      [axios]
-    ),
-    getTranslationBySourceSlug: useCallback(
-      async (sourceSlug: string) =>
-        (
-          await axios.get<TranslationModel[]>('/translations', {
-            params: {
-              sourceSlug,
-            },
-          })
-        ).data[0],
-      [axios]
-    ),
     getMusic: useCallback(
       async (musicId: number) =>
         (
@@ -509,65 +290,12 @@ export function useapi(token?: string) {
         ).data[0],
       [axios]
     ),
-    getVirtualLive: useCallback(
-      async (virtualLiveId: number) =>
-        (
-          await axios.get<VirtualLiveModel[]>('/virtual-lives', {
-            params: { virtualLiveId, _limit: 1 },
-          })
-        ).data[0],
-      [axios]
-    ),
   };
 }
 
 
 const axiosFetcher = async (url: string, params?: any) =>
   (await Axios.get(url, { params })).data;
-
-export function useRemoteLanguages() {
-  const params = useMemo(() => ({ _sort: 'id:ASC' }), []);
-  const { data, error } = useSWR(
-    [`${process.env.REACT_APP_STRAPI_BASE}/languages`, params],
-    axiosFetcher
-  );
-
-  return {
-    languages: data as LanguageModel[],
-    isLoading: !error && !data,
-    error,
-  };
-}
-
-
-export function useAnnouncementsByLanguages(
-  page = 0,
-  limit = 0,
-  languages: number[],
-  params?: any
-) {
-  const _params = useMemo(
-    () => ({
-      _limit: limit,
-      _start: page * limit,
-      _sort: 'isPin:DESC,published_at:DESC',
-      targetLangs: languages,
-      ...(params || {}),
-    }),
-    [languages, limit, page, params]
-  );
-  const { data, error } = useSWR(
-    [`${process.env.REACT_APP_STRAPI_BASE}/announcements/language`, _params],
-    axiosFetcher
-  );
-
-  return {
-    announcements: data as AnnouncementModel[],
-    isLoading: !error && !data,
-    error,
-  };
-}
-
 /**
  * Access api.sekai.best endpoints.
  */
