@@ -1,16 +1,19 @@
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useApi } from '../utils/apiClient';
 import { Button, Paper, Box, Stack } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
+import { InterfaceType } from 'typescript';
+
 
 const FormWithHookForm: React.FC<{}> = () => {
   const { handleSubmit, reset, control } = useForm();
+  const { postLogin } = useApi();
   const onSubmit = (data: any) => {
     console.log(data);
-    let url: string = 'http://yapi.phystack.top/mock/11/auth/login';
-    let config = {};
-    const response = axios.post(url, data, config);
+    let value = Object.assign(data, {});
+    const response = postLogin(data);
     console.log(response)
   };
 

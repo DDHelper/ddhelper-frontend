@@ -1,8 +1,6 @@
 export interface LoginValues {
-  id: number;
-  code: string;
-  name: string;
-  enabled: boolean;
+  username: string;
+  password: string;
 }
 
 export interface RegisterValues {
@@ -10,4 +8,22 @@ export interface RegisterValues {
   password: string;
   confirmPassword: string;
   email: string;
+}
+
+export interface LoginApiReturn {
+  id: number;
+  code: string;
+  name: string;
+  enabled: boolean;
+}
+
+export interface UserModel {
+  id: number;
+  code: string;
+  name: string;
+  enabled: boolean;
+}
+
+export interface UserMetadatumModel {
+  id: number;
 }

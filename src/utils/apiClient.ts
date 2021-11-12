@@ -2,13 +2,16 @@ import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
 import {
   LoginValues,
-
+  LoginApiReturn,
+  RegisterValues,
+  UserModel,
+  UserMetadatumModel
 } from './apiModels';
 
 /**
  * Access api endpoints.
 **/
-export function useapi(token?: string) {
+export function useApi(token?: string) {
   const axios = useMemo(() => {
     const axios = Axios.create({
       // baseURL: process.env.REACT_APP_API_BASE,
@@ -16,7 +19,9 @@ export function useapi(token?: string) {
     });
 
     axios.interceptors.request.use((req) => {
-      token && (req.headers.authorization = `Bearer ${token}`);
+      token && (req.headers = {
+        authorization: `Bearer ${token}`,
+      });
       return req;
     });
 
@@ -62,24 +67,6 @@ export function useapi(token?: string) {
         ).data,
       [axios]
     ),
-    postUpload: useCallback(
-      async (formData: FormData, token?: string) =>
-        (
-          await axios.post('/upload', formData, {
-            headers: Object.assign(
-              {
-                'Content-Type': 'multipart/form-data',
-              },
-              token
-                ? {
-                  authorization: `Bearer ${token}`,
-                }
-                : {}
-            ),
-          })
-        ).data,
-      [axios]
-    ),
     putUserMetadataMe: useCallback(
       async (
         data: Partial<UserMetadatumModel>
@@ -89,12 +76,7 @@ export function useapi(token?: string) {
             '/user-metadata/me',
             Object.assign(
               {},
-              data,
-              data.languages
-                ? {
-                  languages: data.languages.map((lang) => lang.id),
-                }
-                : {}
+              data
             )
           )
         ).data;
@@ -119,175 +101,6 @@ export function useapi(token?: string) {
             passwordConfirmation,
           })
         ).data,
-      [axios]
-    ),
-    getAnnouncements: useCallback(
-      async (params?: { [key: string]: any }) =>
-        (
-          await axios.get<AnnouncementModel[]>('/announcements?', {
-            params: {
-              _sort: 'isPin:DESC,published_at:DESC',
-              ...(params || {}),
-            },
-          })
-        ).data,
-      [axios]
-    ),
-    getAnnouncementById: useCallback(
-      async (id: string, params?: { [key: string]: any }) =>
-        (await axios.get<AnnouncementModel>(`/announcements/${id}`, { params }))
-          .data,
-      [axios]
-    ),
-    getAnnouncementPage: useCallback(
-      async (
-        limit: number = 30,
-        page: number = 0,
-        params?: { [key: string]: any }
-      ) =>
-        (
-          await axios.get<AnnouncementModel[]>('/announcements', {
-            params: {
-              _limit: limit,
-              _start: page * limit,
-              _sort: 'isPin:DESC,published_at:DESC',
-              ...(params || {}),
-            },
-          })
-        ).data,
-      [axios]
-    ),
-    getAnnouncementCount: useCallback(
-      async (params?: any) =>
-        Number((await axios.get('/announcements/count', { params })).data),
-      [axios]
-    ),
-    getAnnouncementByLanguagesPage: useCallback(
-      async (
-        limit: number = 30,
-        page: number = 0,
-        languages: number[],
-        params?: { [key: string]: any }
-      ) =>
-        (
-          await axios.get<AnnouncementModel[]>('/announcements/language', {
-            params: {
-              _limit: limit,
-              _start: page * limit,
-              _sort: 'isPin:DESC,published_at:DESC',
-              targetLangs: languages,
-              ...(params || {}),
-            },
-          })
-        ).data,
-      [axios]
-    ),
-    getAnnouncementByLanguagesCount: useCallback(
-      async (languages: number[]) =>
-        Number(
-          (
-            await axios.get('/announcements/language/count', {
-              params: { targetLangs: languages },
-            })
-          ).data
-        ),
-      [axios]
-    ),
-    getComments: useCallback(
-      async (contentType: string, id: string | number) =>
-        (await axios.get(`/comments/${contentType}:${id}`)).data,
-      [axios]
-    ),
-    postComment: useCallback(
-      async (
-        contentType: string,
-        id: string | number,
-        userId: number,
-        avatar: AvatarModel | null,
-        content: string
-      ) =>
-        (
-          await axios.post(`/comments/${contentType}:${id}`, {
-            authorUser: userId,
-            authorAvatar: avatar ? avatar.url : null,
-            content,
-            related: [
-              {
-                refId: id,
-                ref: contentType,
-                field: 'comments',
-              },
-            ],
-          })
-        ).data,
-      [axios]
-    ),
-    getUserProfile: useCallback(
-      async (id: string | number) =>
-        (
-          await axios.get<UserMetadatumModel>(
-            `/user-metadata/profile/user/${id}`
-          )
-        ).data,
-      [axios]
-    ),
-    patchCommentLike: useCallback(
-      async (
-        contentType: string,
-        contentId: string | number,
-        commentId: string | number
-      ) =>
-        (
-          await axios.patch<CommentModel>(
-            `/comments/${contentType}:${contentId}/comment/${commentId}/like`
-          )
-        ).data,
-      [axios]
-    ),
-    postCommentAbuse: useCallback(
-      async (
-        contentType: string,
-        contentId: string | number,
-        commentId: string | number,
-        reason: CommentAbuseReason,
-        content: string
-      ) =>
-        (
-          await axios.post(
-            `/comments/${contentType}:${contentId}/comment/${commentId}/report-abuse`,
-            {
-              reason,
-              content,
-            }
-          )
-        ).data,
-      [axios]
-    ),
-    getMusic: useCallback(
-      async (musicId: number) =>
-        (
-          await axios.get<MusicModel[]>('/musics', {
-            params: { musicId, _limit: 1 },
-          })
-        ).data[0],
-      [axios]
-    ),
-    getCard: useCallback(
-      async (cardId: number) =>
-        (
-          await axios.get<CardModel[]>('/cards', {
-            params: { cardId, _limit: 1 },
-          })
-        ).data[0],
-      [axios]
-    ),
-    getEvent: useCallback(
-      async (eventId: number) =>
-        (
-          await axios.get<EventModel[]>('/events', {
-            params: { eventId, _limit: 1 },
-          })
-        ).data[0],
       [axios]
     ),
   };
