@@ -1,12 +1,10 @@
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useApi } from '../utils/apiClient';
 import {
   Button,
   Paper,
   Box,
-  Stack,
   Grid,
   CssBaseline,
   Typography,
@@ -37,10 +35,10 @@ const LoginFormWithHook: React.FC<{}> = () => {
         margin="normal"
         required
         fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
+        id="username"
+        label="Username"
+        name="username"
+        autoComplete="username"
         autoFocus
       />
       <TextField
@@ -62,12 +60,12 @@ const LoginFormWithHook: React.FC<{}> = () => {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link href="#" variant="body2">
+          <Link href="#" variant="body2" /* TODO: route to iforgot */>
             Forgot password?
           </Link>
         </Grid>
         <Grid item>
-          <Link href="#" variant="body2">
+          <Link href="/auth/register" variant="body2">
             {"Don't have an account? Sign Up"}
           </Link>
         </Grid>
@@ -112,7 +110,7 @@ const AuthView = () => {
               DD Helper
             </Typography>
             <Typography component="h1" variant="h6">
-              Sign in
+              登录
             </Typography>
             <LoginFormWithHook />
           </Box>
