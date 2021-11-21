@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import AuthView from "./components/auth";
+import RegisterView from './components/signup';
 
 function App() {
   /*
@@ -59,7 +60,7 @@ function App() {
             <AuthView />
           </Route>
           <Route path="/auth/register" exact>
-            <AuthView />
+            <RegisterView />
           </Route>
         </Suspense>
       </Switch>
