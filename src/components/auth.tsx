@@ -74,7 +74,7 @@ const LoginFormWithHook: React.FC<{}> = () => {
   );
 };
 
-const AuthView = () => {
+const AuthView: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>

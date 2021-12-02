@@ -77,7 +77,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
   );
 };
 
-export default function RegisterView() {
+const RegisterView: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -94,7 +94,7 @@ export default function RegisterView() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-              DD Helper
+            DD Helper
           </Typography>
           <Typography component="h1" variant="h6">
             注册
@@ -104,4 +104,6 @@ export default function RegisterView() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default RegisterView;
