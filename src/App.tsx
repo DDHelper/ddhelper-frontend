@@ -1,8 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {
+  Suspense,
+} from 'react';
 import './App.css';
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch,
+} from "react-router-dom";
+import {
+  Grid,
+  Paper,
+} from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
+import AuthView from "./components/auth";
+import RegisterView from './components/signup';
 
 function App() {
+  /*
   return (
     <div className="App">
       <header className="App-header">
@@ -20,6 +36,35 @@ function App() {
         </a>
       </header>
     </div>
+  );
+  */
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Suspense
+          fallback={
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <Skeleton variant="rectangular" width="30%" height={30} />
+              </Grid>
+              <Grid item>
+                <Skeleton variant="rectangular" width="90%" height={200} />
+              </Grid>
+              <Grid item>
+                <Skeleton variant="rectangular" width="90%" height={200} />
+              </Grid>
+            </Grid>
+          }
+        >
+          <Route path="/auth/login" exact>
+            <AuthView />
+          </Route>
+          <Route path="/auth/register" exact>
+            <RegisterView />
+          </Route>
+        </Suspense>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
