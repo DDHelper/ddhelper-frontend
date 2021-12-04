@@ -9,12 +9,22 @@ import {
   Typography,
   Link,
   Avatar,
-  Checkbox,
-  FormControlLabel,
+  AppBar,
+  Toolbar,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const PageHeader: React.FC<{}> = () => {
-  return <Box />;
+  return (
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div">
+          Header Title
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
 };
+
+export default PageHeader;
