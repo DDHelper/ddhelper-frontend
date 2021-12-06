@@ -17,7 +17,7 @@ import Skeleton from "@mui/material/Skeleton";
 import AuthView from "./components/auth";
 import RegisterView from './components/signup';
 import TemplatePageView from './components/template';
-
+import SearchView from './components/search';
 function App() {
   /*
   return (
@@ -65,6 +65,9 @@ function App() {
           </Route>
           <Route path="/" exact>
             <TemplatePageView />
+          </Route>
+          <Route path="/auth/search" exact>
+            <SearchView/>
           </Route>
         </Suspense>
       </Switch>
