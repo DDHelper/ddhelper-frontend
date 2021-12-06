@@ -53,7 +53,9 @@ const drawerWidth = 240;
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <ListItemIcon /> : <ListItemIcon />}</ListItemIcon>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                <AssignmentIndOutlinedIcon />
+                {/* <AssignmentIndOutlinedIcon /> */}
+                <Avatar alt="q" src="/imgs/1.jpg" />
+                
                </Avatar>
                 <ListItemText primary={text} secondary="blablabla"/>
               </ListItem>
