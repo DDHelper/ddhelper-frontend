@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import ListItemText from '@mui/material/ListItemText';
@@ -48,18 +49,48 @@ const drawerWidth = 240;
             <Toolbar />
             <Typography paragraph>
               Search
-              <List>
-            {['Account 1', 'Account 2', 'Account 3'].map((text, index) => (
+              <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+              <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+          <Avatar alt="1" src="/imgs/1.jpg" />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary="Account 1" secondary="blablabla" />
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+          <Avatar alt="2" src="/imgs/2.jpg" />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary="Account 2" secondary="blablabla" />
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+          <Avatar alt="3" src="/imgs/3.jpg" />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary="Account 3" secondary="blablabla" />
+      </ListItem>
+
+            {/* {['Account 1', 'Account 2', 'Account 3'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <ListItemIcon /> : <ListItemIcon />}</ListItemIcon>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                 {/* <AssignmentIndOutlinedIcon /> */}
-                <Avatar alt="q" src="/imgs/1.jpg" />
-                
+                {/* <Avatar alt="1" src="/imgs/1.jpg" /> */}
+                {/* </Avatar>
+               <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                 <Avatar alt="2" src="/imgs/2.jpg" />
                </Avatar>
+               <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                <Avatar alt="3" src="/imgs/3.jpg" />
+                </Avatar>
                 <ListItemText primary={text} secondary="blablabla"/>
               </ListItem>
-            ))}
+            ))} */} 
           </List>
             </Typography>
             
