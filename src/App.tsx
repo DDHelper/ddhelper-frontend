@@ -16,6 +16,7 @@ import {
 import Skeleton from "@mui/material/Skeleton";
 import AuthView from "./components/auth";
 import RegisterView from './components/signup';
+import TemplatePageView from './components/template';
 
 function App() {
   /*
@@ -61,6 +62,9 @@ function App() {
           </Route>
           <Route path="/auth/register" exact>
             <RegisterView />
+          </Route>
+          <Route path="/" exact>
+            <TemplatePageView />
           </Route>
         </Suspense>
       </Switch>
