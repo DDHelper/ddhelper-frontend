@@ -44,12 +44,12 @@ export function useApi(token?: string) {
   return {
     postLogin: useCallback(
       async (values: LoginValues): Promise<LoginApiReturn> =>
-        (await axios.post<LoginApiReturn>('/auth/login', values)).data,
+        (await axios.post<LoginApiReturn>('/account/login', values)).data,
       [axios]
     ),
     postRegister: useCallback(
       async (values: RegisterValues): Promise<LoginApiReturn> =>
-        (await axios.post<LoginApiReturn>('/auth/register', values))
+        (await axios.post<LoginApiReturn>('/account/register', values))
           .data,
       [axios]
     ),

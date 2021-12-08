@@ -37,7 +37,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         required
         fullWidth
         id="username"
-        label="Username"
+        label="用户名"
         name="username"
         autoComplete="username"
         autoFocus
@@ -47,7 +47,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         required
         fullWidth
         name="password"
-        label="Password"
+        label="密码"
         type="password"
         id="password"
         autoComplete="current-password"
@@ -57,18 +57,26 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         required
         fullWidth
         id="confirmPassword"
-        label="Confirm Password"
+        type="password"
+        label="确认密码"
         name="confirmPassword"
-        autoFocus
       />
       <TextField
         margin="normal"
         required
         fullWidth
         name="email"
-        label="Email Address"
+        label="电子邮箱"
         id="email"
         autoComplete="email"
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="pin"
+        label="验证码"
+        name="pin"
       />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         注册

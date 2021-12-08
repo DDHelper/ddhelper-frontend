@@ -8,6 +8,7 @@ export interface RegisterValues {
   password: string;
   confirmPassword: string;
   email: string;
+  pin: string;
 }
 
 export interface LoginApiReturn {
