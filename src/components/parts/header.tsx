@@ -15,6 +15,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { useHistory } from 'react-router';
+import Button from '@mui/material/Button';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -62,6 +64,7 @@ const PageHeader: React.FC<{}> = () => {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const history = useHistory();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +85,18 @@ const PageHeader: React.FC<{}> = () => {
 
   const handleToProfile = () => {
     //TODO: give a link to profile
+    history.push({
+      pathname: '/user/profile',
+      state: {},
+    });
+  };
+
+  const handleToUser = () => {
+    //TODO: give a link to user
+    history.push({
+      pathname: '/user/user',
+      state: {},
+    });
   };
 
   const menuId = 'primary-search-account-menu';
@@ -101,8 +116,8 @@ const PageHeader: React.FC<{}> = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleToProfile}>Profile</MenuItem>
+      <MenuItem onClick={handleToUser}>My account</MenuItem>
     </Menu>
   );
 
@@ -158,15 +173,6 @@ const PageHeader: React.FC<{}> = () => {
     <Box /*sx={{ flexGrow: 1 }}*/>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
@@ -184,15 +190,14 @@ const PageHeader: React.FC<{}> = () => {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
+              <MailIcon />
             </IconButton>
-            <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Button href="/auth/login" variant="contained" disableElevation>
+              登录
+            </Button>
+            <Button href="/auth/register" variant="contained" disableElevation>
+              注册
+            </Button>
             <IconButton
               size="large"
               edge="end"
