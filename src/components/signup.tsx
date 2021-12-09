@@ -17,16 +17,25 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Controller, useForm } from 'react-hook-form';
+import { serialize } from 'object-to-formdata';
 
 const theme = createTheme();
 
 const RegisterFormWithHook: React.FC<{}> = () => {
-  const { handleSubmit, reset, control } = useForm();
-  const { postRegister } = useApi();
+  const { handleSubmit, register, getValues } = useForm();
+  const { postRegister, postSendPin } = useApi();
   const onSubmit = (data: any) => {
-    console.log(data);
+    console.log(typeof data);
     let value = Object.assign(data, {});
     const response = postRegister(value);
+    console.log(response);
+  };
+
+  const handleSendEmail = () => {
+    console.log(getValues('email'));
+    let value = { email: getValues('email') };
+    const formData = serialize(value);
+    const response = postSendPin(formData);
     console.log(response);
   };
 
@@ -65,20 +74,16 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         margin="normal"
         required
         fullWidth
-        name="email"
         label="电子邮箱"
         id="email"
         autoComplete="email"
+        {...register('email')}
       />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="pin"
-        label="验证码"
-        name="pin"
-      />
+      <TextField margin="normal" required fullWidth id="pin" label="验证码" name="pin" />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        注册
+      </Button>
+      <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={() => handleSendEmail()}>
         注册
       </Button>
     </Box>

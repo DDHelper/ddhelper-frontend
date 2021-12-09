@@ -2,6 +2,7 @@
   "name": "ddhelper-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://ddd.edrows.top:8000",
   "dependencies": {
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
@@ -16,6 +17,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.3.1",
     "axios": "^0.24.0",
+    "object-to-formdata": "^4.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.17.5",

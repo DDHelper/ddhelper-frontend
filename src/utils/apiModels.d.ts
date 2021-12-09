@@ -4,11 +4,15 @@ export interface LoginValues {
 }
 
 export interface RegisterValues {
-  username: string;
-  password: string;
-  confirmPassword: string;
-  email: string;
-  pin: string;
+  username: FormDataEntryValue;
+  password: FormDataEntryValue;
+  confirmPassword: FormDataEntryValue;
+  email: FormDataEntryValue;
+  pin: FormDataEntryValue;
+}
+
+export interface PinValues {
+  email: FormDataEntryValue | null;
 }
 
 export interface LoginApiReturn {
@@ -16,6 +20,11 @@ export interface LoginApiReturn {
   code: string;
   name: string;
   enabled: boolean;
+}
+
+export interface PinApiReturn {
+  code: number;
+  msg: string;
 }
 
 export interface UserModel {

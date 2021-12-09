@@ -4,8 +4,10 @@ import {
   LoginValues,
   LoginApiReturn,
   RegisterValues,
+  PinValues,
   UserModel,
-  UserMetadatumModel
+  UserMetadatumModel,
+  PinApiReturn
 } from './apiModels';
 
 /**
@@ -15,7 +17,7 @@ export function useApi(token?: string) {
   const axios = useMemo(() => {
     const axios = Axios.create({
       // baseURL: process.env.REACT_APP_API_BASE,
-      baseURL: 'http://yapi.phystack.top/mock/11'
+      baseURL: ''
     });
 
     axios.interceptors.request.use((req) => {
@@ -50,6 +52,12 @@ export function useApi(token?: string) {
     postRegister: useCallback(
       async (values: RegisterValues): Promise<LoginApiReturn> =>
         (await axios.post<LoginApiReturn>('/account/register', values))
+          .data,
+      [axios]
+    ),
+    postSendPin: useCallback(
+      async (values: FormData): Promise<PinApiReturn> =>
+        (await axios.post<PinApiReturn>('/account/send_pin/', values))
           .data,
       [axios]
     ),
