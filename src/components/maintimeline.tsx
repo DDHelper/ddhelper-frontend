@@ -32,7 +32,7 @@ import PageSider from './parts/sider';
 const theme = createTheme();
 const drawerWidth = 240;
 
-const MaintimelinePageView: React.FC<{}> = () => {
+const MainTimelinePageView: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
@@ -45,102 +45,95 @@ const MaintimelinePageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          
+
           <Timeline position="alternate">
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          9:30 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot>
-            <FastfoodIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            抽奖
-          </Typography>
-          <Typography>去转发抽奖</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          10:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary">
-            <LaptopMacIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            直播
-          </Typography>
-          <Typography>去看直播</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-      <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          5:00 pm
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary" variant="outlined">
-            <HotelIcon />
-          </TimelineDot>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            新视频更新
-          </Typography>
-          <Typography>去看新视频</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-      <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          9:00 pm
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-          <TimelineDot color="secondary">
-            <RepeatIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            直播
-          </Typography>
-          <Typography>去看新的直播</Typography>
-        </TimelineContent>
-      </TimelineItem>
-    </Timeline>
+            <TimelineItem>
+              <TimelineOppositeContent
+                sx={{ m: 'auto 0' }}
+                align="right"
+                variant="body2"
+                color="text.secondary"
+              >
+                9:30 am
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot>
+                  <FastfoodIcon />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <Typography variant="h6" component="span">
+                  抽奖
+                </Typography>
+                <Typography>去转发抽奖</Typography>
+              </TimelineContent>
+            </TimelineItem>
+            <TimelineItem>
+              <TimelineOppositeContent sx={{ m: 'auto 0' }} variant="body2" color="text.secondary">
+                10:00 am
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot color="primary">
+                  <LaptopMacIcon />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <Typography variant="h6" component="span">
+                  直播
+                </Typography>
+                <Typography>去看直播</Typography>
+              </TimelineContent>
+            </TimelineItem>
+            <TimelineItem>
+              <TimelineOppositeContent sx={{ m: 'auto 0' }} variant="body2" color="text.secondary">
+                5:00 pm
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot color="primary" variant="outlined">
+                  <HotelIcon />
+                </TimelineDot>
+                <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <Typography variant="h6" component="span">
+                  新视频更新
+                </Typography>
+                <Typography>去看新视频</Typography>
+              </TimelineContent>
+            </TimelineItem>
+            <TimelineItem>
+              <TimelineOppositeContent sx={{ m: 'auto 0' }} variant="body2" color="text.secondary">
+                9:00 pm
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+                <TimelineDot color="secondary">
+                  <RepeatIcon />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <Typography variant="h6" component="span">
+                  直播
+                </Typography>
+                <Typography>去看新的直播</Typography>
+              </TimelineContent>
+            </TimelineItem>
+          </Timeline>
         </Box>
       </Box>
     </ThemeProvider>
   );
 };
-//TODO:"加入一个timeline"
-export default MaintimelinePageView;
+
+/*
+< >
+{< > for item in []}
+</ >
+*/
+export default MainTimelinePageView;

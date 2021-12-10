@@ -18,7 +18,7 @@ import AuthView from "./components/auth";
 import RegisterView from './components/signup';
 import TemplatePageView from './components/template';
 import MainrolllistPageView from './components/mainrolllist';
-import MaintimelinePageView from './components/maintimeline';
+import MainTimelinePageView from './components/maintimeline';
 function App() {
   /*
   return (
@@ -64,14 +64,14 @@ function App() {
           <Route path="/auth/register" exact>
             <RegisterView />
           </Route>
-          <Route path="/main" exact>
+          <Route path="/" exact>
             <TemplatePageView />
           </Route>
-          <Route path="/mainrolllist" exact>
+          <Route path="/main" exact>
             <MainrolllistPageView />
           </Route>
-          <Route path="/maintimeline" exact>
-            <MaintimelinePageView />
+          <Route path="/timeline" exact>
+            <MainTimelinePageView />
           </Route>
         </Suspense>
       </Switch>
