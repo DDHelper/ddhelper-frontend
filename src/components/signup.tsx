@@ -1,90 +1,116 @@
 import TextField from '@mui/material/TextField';
-import React, { useState } from 'react';
+import React from 'react';
 import { useApi } from '../utils/apiClient';
 import {
   Button,
-  Paper,
   Box,
-  Grid,
   CssBaseline,
   Typography,
-  Link,
   Avatar,
-  Checkbox,
-  FormControlLabel,
   Container,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { serialize } from 'object-to-formdata';
+import { Md5 } from 'ts-md5/dist/md5';
 
 const theme = createTheme();
 
 const RegisterFormWithHook: React.FC<{}> = () => {
-  const { handleSubmit, register, getValues } = useForm();
+  const {
+    handleSubmit,
+    register,
+    getValues,
+    formState: { errors },
+  } = useForm();
   const { postRegister, postSendPin } = useApi();
-  const onSubmit = (data: any) => {
-    console.log(typeof data);
+
+  const onSubmit = async (data: any) => {
     let value = Object.assign(data, {});
-    const response = postRegister(value);
-    console.log(response);
+    value.password = Md5.hashStr(value.password)
+    value.confirmPassword = Md5.hashStr(value.confirmPassword)
+    const formData = serialize(value);
+    const response = await postRegister(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else alert('注册成功');
   };
 
-  const handleSendEmail = () => {
-    console.log(getValues('email'));
-    let value = { email: getValues('email') };
+  const onSendEmail = async (data: any) => {
+    console.log(data.email);
+    let value = { email: data.email };
     const formData = serialize(value);
-    const response = postSendPin(formData);
-    console.log(response);
+    const response = await postSendPin(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else alert('已发送验证码');
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
-      <TextField
-        margin="normal"
-        required
+    <Box>
+      <Box component="form" sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="用户名"
+          autoComplete="username"
+          autoFocus
+          {...register('username')}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="密码"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          {...register('password')}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="confirmPassword"
+          type="password"
+          label="确认密码"
+          {...register('confirmPassword')}
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          label="电子邮箱"
+          id="email"
+          autoComplete="email"
+          {...register('email', { required: true })}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="验证码"
+          id="pin"
+          autoComplete="pin"
+          {...register('pin')}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handleSubmit(onSubmit)}
+        >
+          注册
+        </Button>
+      </Box>
+      <Button
         fullWidth
-        id="username"
-        label="用户名"
-        name="username"
-        autoComplete="username"
-        autoFocus
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        name="password"
-        label="密码"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="confirmPassword"
-        type="password"
-        label="确认密码"
-        name="confirmPassword"
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        label="电子邮箱"
-        id="email"
-        autoComplete="email"
-        {...register('email')}
-      />
-      <TextField margin="normal" required fullWidth id="pin" label="验证码" name="pin" />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        注册
-      </Button>
-      <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={() => handleSendEmail()}>
-        注册
+        variant="outlined"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleSubmit(onSendEmail)}
+      >
+        发送验证码
       </Button>
     </Box>
   );

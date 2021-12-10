@@ -30,8 +30,8 @@ export function useApi(token?: string) {
     axios.interceptors.response.use(
       (res) => res,
       (err) => {
-        if (err.response.data.message && err.response.status !== 500)
-          err.id = err.response.data.message[0].messages[0].id;
+        if (err.response.status === 400)
+          return Promise.resolve(err.response)
         else if (err.response.status === 500) {
           err.id = err.response.data.error;
           err.message = err.response.data.message;
@@ -45,13 +45,13 @@ export function useApi(token?: string) {
 
   return {
     postLogin: useCallback(
-      async (values: LoginValues): Promise<LoginApiReturn> =>
+      async (values: FormData): Promise<LoginApiReturn> =>
         (await axios.post<LoginApiReturn>('/account/login', values)).data,
       [axios]
     ),
     postRegister: useCallback(
-      async (values: RegisterValues): Promise<LoginApiReturn> =>
-        (await axios.post<LoginApiReturn>('/account/register', values))
+      async (values: FormData): Promise<LoginApiReturn> =>
+        (await axios.post<LoginApiReturn>('/account/register/', values))
           .data,
       [axios]
     ),

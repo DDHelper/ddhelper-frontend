@@ -16,10 +16,8 @@ export interface PinValues {
 }
 
 export interface LoginApiReturn {
-  id: number;
-  code: string;
-  name: string;
-  enabled: boolean;
+  code: number;
+  msg: string;
 }
 
 export interface PinApiReturn {
