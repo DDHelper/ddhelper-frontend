@@ -4,18 +4,24 @@ export interface LoginValues {
 }
 
 export interface RegisterValues {
-  username: FormDataEntryValue;
-  password: FormDataEntryValue;
-  confirmPassword: FormDataEntryValue;
-  email: FormDataEntryValue;
-  pin: FormDataEntryValue;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  email: string;
+  pin: string;
 }
 
 export interface PinValues {
-  email: FormDataEntryValue | null;
+  email: string;
 }
 
 export interface LoginApiReturn {
+  code: number;
+  msg?: string;
+  data?: object;
+}
+
+export interface RegisterApiReturn {
   code: number;
   msg: string;
 }

@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { serialize } from 'object-to-formdata';
 import { Md5 } from 'ts-md5/dist/md5';
+import { RegisterValues, PinValues } from '../utils/apiModels';
 
 const theme = createTheme();
 
@@ -26,7 +27,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
     else setEmailEmpty(true);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: RegisterValues) => {
     let value = Object.assign(data, {});
     value.password = Md5.hashStr(value.password);
     value.confirmPassword = Md5.hashStr(value.confirmPassword);

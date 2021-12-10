@@ -18,18 +18,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import { serialize } from 'object-to-formdata';
 import { Md5 } from 'ts-md5/dist/md5';
+import { LoginValues } from '../utils/apiModels';
 
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
-  const { handleSubmit, reset, control } = useForm();
+  const { handleSubmit, register, control } = useForm();
   const { postLogin } = useApi();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
     value.password = Md5.hashStr(value.password);
     const formData = serialize(value);
     const response = await postLogin(formData);
+    console.log(response.code !== 200)
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     else alert('登录成功');
   };
@@ -37,28 +39,28 @@ const LoginFormWithHook: React.FC<{}> = () => {
   return (
     <Box component="form" sx={{ mt: 1 }}>
       <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="username"
-        label="Username"
-        name="username"
-        autoComplete="username"
-        autoFocus
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-      />
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="用户名"
+          autoComplete="username"
+          autoFocus
+          {...register('username', { required: true })}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="密码"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          {...register('password', { required: true })}
+        />
       <FormControlLabel
         control={<Checkbox value="remember" color="primary" />}
-        label="Remember me"
+        label="记住用户"
       />
       <Button
         type="submit"
@@ -77,7 +79,7 @@ const LoginFormWithHook: React.FC<{}> = () => {
         </Grid>
         <Grid item>
           <Link href="/auth/register" variant="body2">
-            {"Don't have an account? Sign Up"}
+            注册
           </Link>
         </Grid>
       </Grid>
