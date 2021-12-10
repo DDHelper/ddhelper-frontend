@@ -1,14 +1,7 @@
 import TextField from '@mui/material/TextField';
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { useApi } from '../utils/apiClient';
-import {
-  Button,
-  Box,
-  CssBaseline,
-  Typography,
-  Avatar,
-  Container,
-} from '@mui/material';
+import { Button, Box, CssBaseline, Typography, Avatar, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
@@ -25,20 +18,27 @@ const RegisterFormWithHook: React.FC<{}> = () => {
     formState: { errors },
   } = useForm();
   const { postRegister, postSendPin } = useApi();
+  const [emailEmpty, setEmailEmpty] = useState<boolean>(true);
+
+  const checkEmailEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    if (email !== undefined && email !== '') setEmailEmpty(false);
+    else setEmailEmpty(true);
+  };
 
   const onSubmit = async (data: any) => {
     let value = Object.assign(data, {});
-    value.password = Md5.hashStr(value.password)
-    value.confirmPassword = Md5.hashStr(value.confirmPassword)
+    value.password = Md5.hashStr(value.password);
+    value.confirmPassword = Md5.hashStr(value.confirmPassword);
     const formData = serialize(value);
     const response = await postRegister(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     else alert('注册成功');
   };
 
-  const onSendEmail = async (data: any) => {
-    console.log(data.email);
-    let value = { email: data.email };
+  const onSendEmail = async () => {
+    let value = { email: await getValues('email') };
+    console.log(getValues('email'));
     const formData = serialize(value);
     const response = await postSendPin(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
@@ -56,7 +56,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           label="用户名"
           autoComplete="username"
           autoFocus
-          {...register('username')}
+          {...register('username', { required: true })}
         />
         <TextField
           margin="normal"
@@ -66,7 +66,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           type="password"
           id="password"
           autoComplete="current-password"
-          {...register('password')}
+          {...register('password', { required: true })}
         />
         <TextField
           margin="normal"
@@ -75,15 +75,19 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           id="confirmPassword"
           type="password"
           label="确认密码"
-          {...register('confirmPassword')}
+          {...register('confirmPassword', { required: true })}
         />
         <TextField
           margin="normal"
           fullWidth
+          required
           label="电子邮箱"
           id="email"
           autoComplete="email"
-          {...register('email', { required: true })}
+          {...register('email', {
+            required: true,
+            onChange: checkEmailEmpty,
+          })}
         />
         <TextField
           margin="normal"
@@ -92,7 +96,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           label="验证码"
           id="pin"
           autoComplete="pin"
-          {...register('pin')}
+          {...register('pin', { required: true })}
         />
         <Button
           type="submit"
@@ -108,7 +112,8 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         fullWidth
         variant="outlined"
         sx={{ mt: 3, mb: 2 }}
-        onClick={handleSubmit(onSendEmail)}
+        disabled={emailEmpty}
+        onClick={onSendEmail}
       >
         发送验证码
       </Button>

@@ -15,22 +15,27 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { serialize } from 'object-to-formdata';
+import { Md5 } from 'ts-md5/dist/md5';
 
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
   const { handleSubmit, reset, control } = useForm();
   const { postLogin } = useApi();
-  const onSubmit = (data: any) => {
-    console.log(data);
+
+  const onSubmit = async (data: any) => {
     let value = Object.assign(data, {});
-    const response = postLogin(value);
-    console.log(response);
+    value.password = Md5.hashStr(value.password);
+    const formData = serialize(value);
+    const response = await postLogin(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else alert('登录成功');
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+    <Box component="form" sx={{ mt: 1 }}>
       <TextField
         margin="normal"
         required
@@ -55,8 +60,14 @@ const LoginFormWithHook: React.FC<{}> = () => {
         control={<Checkbox value="remember" color="primary" />}
         label="Remember me"
       />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        Sign In
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleSubmit(onSubmit)}
+      >
+        登录
       </Button>
       <Grid container>
         <Grid item xs>
