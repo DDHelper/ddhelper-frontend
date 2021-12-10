@@ -170,6 +170,7 @@ const PageHeader: React.FC<{}> = () => {
   );
 
   return (
+<<<<<<< HEAD
     <Box /*sx={{ flexGrow: 1 }}*/>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
@@ -227,6 +228,18 @@ const PageHeader: React.FC<{}> = () => {
       {renderMobileMenu}
       {renderMenu}
     </Box>
+=======
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div">
+          <a href="/main"  title="首页">
+              <img alt="DD助手" src="header.png" width="100" height="60"/>      
+            </a>
+          
+        </Typography>
+      </Toolbar>
+    </AppBar>
+>>>>>>> feat
   );
 };
 

@@ -17,7 +17,8 @@ import Skeleton from "@mui/material/Skeleton";
 import AuthView from "./components/auth";
 import RegisterView from './components/signup';
 import TemplatePageView from './components/template';
-
+import MainrolllistPageView from './components/mainrolllist';
+import MaintimelinePageView from './components/maintimeline';
 function App() {
   /*
   return (
@@ -63,8 +64,14 @@ function App() {
           <Route path="/auth/register" exact>
             <RegisterView />
           </Route>
-          <Route path="/" exact>
+          <Route path="/main" exact>
             <TemplatePageView />
+          </Route>
+          <Route path="/mainrolllist" exact>
+            <MainrolllistPageView />
+          </Route>
+          <Route path="/maintimeline" exact>
+            <MaintimelinePageView />
           </Route>
         </Suspense>
       </Switch>
