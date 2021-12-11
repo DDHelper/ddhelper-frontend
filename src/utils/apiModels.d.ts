@@ -32,10 +32,30 @@ export interface PinApiReturn {
 }
 
 export interface UserModel {
-  id: number;
-  code: string;
-  name: string;
-  enabled: boolean;
+  username: string;
+  uid: number;
+  email: string;
+}
+
+export interface UserApiReturn {
+  code: number;
+  data: {
+    username: string;
+    uid: number;
+    email: string;
+  };
+}
+
+export interface SearchSubsribeApiReturn {
+  code: number;
+  data: {
+    mid: number;
+    uname: string;
+    fans: number;
+    usign: string;
+    upic: string;
+    raw: object;
+  };
 }
 
 export interface UserMetadatumModel {

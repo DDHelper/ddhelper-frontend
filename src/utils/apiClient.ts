@@ -1,3 +1,4 @@
+import { SearchSubsribeApiReturn, UserApiReturn } from './apiModels.d';
 import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
 import {
@@ -64,11 +65,11 @@ export function useApi(token?: string) {
         (await axios.post<PinApiReturn>('/account/send_pin/', values)).data,
       [axios]
     ),
-    getUserMe: useCallback(
-      async (token?: string): Promise<UserModel> =>
+    getUserInfo: useCallback(
+      async (token?: string): Promise<UserApiReturn> =>
         (
-          await axios.get<UserModel>(
-            '/users/me',
+          await axios.get<UserApiReturn>(
+            '/account/user_info',
             token
               ? {
                   headers: { authorization: `Bearer ${token}` },
@@ -78,11 +79,18 @@ export function useApi(token?: string) {
         ).data,
       [axios]
     ),
-    putUserMetadataMe: useCallback(
-      async (data: Partial<UserMetadatumModel>): Promise<UserMetadatumModel> => {
-        return (await axios.put<UserMetadatumModel>('/user-metadata/me', Object.assign({}, data)))
-          .data;
-      },
+    getSearchSubsribe: useCallback(
+      async (token?: string): Promise<SearchSubsribeApiReturn> =>
+        (
+          await axios.get<SearchSubsribeApiReturn>(
+            '/subscribe/search',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                }
+              : {}
+          )
+        ).data,
       [axios]
     ),
     postForgotPassword: useCallback(
@@ -110,7 +118,7 @@ export function useApi(token?: string) {
 
 const axiosFetcher = async (url: string, params?: any) => (await Axios.get(url, { params })).data;
 /**
- * Access api.sekai.best endpoints.
+ * Access ddhelper api endpoints.
  */
 // export function useApi() {
 //   const axios = Axios.create({
