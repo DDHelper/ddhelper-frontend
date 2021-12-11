@@ -139,6 +139,16 @@ const PageHeader: React.FC<{}> = () => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
+        <Button href="/auth/login" variant="text" disableElevation>
+          登录
+        </Button>
+      </MenuItem>
+      <MenuItem>
+        <Button href="/auth/register" variant="text" disableElevation>
+          注册
+        </Button>
+      </MenuItem>
+      <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
@@ -181,12 +191,6 @@ const PageHeader: React.FC<{}> = () => {
           >
             DD Helper
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-          </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
