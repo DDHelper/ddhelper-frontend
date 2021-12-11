@@ -20,25 +20,71 @@ import PageSider from './parts/sider';
 import { useApi } from '../utils/apiClient';
 import { useEffect, useState } from 'react';
 import { UserApiReturn } from '../utils/apiModels';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
 
 const theme = createTheme();
 const drawerWidth = 240;
 
 const UserContent: React.FC<UserApiReturn> = (props) => {
-  return <div>mememememe</div>;
+  return (
+    <Card sx={{ minWidth: 275 }}>
+      <CardContent>
+        <Typography variant="h4" color="text.secondary" gutterBottom>
+          用户信息
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <Typography variant="h5" component="div">
+              用户名
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography variant="h5" component="div">
+              {props.data.username}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h5" component="div">
+              uid
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography variant="h5" color="text.secondary">
+              {props.data.uid}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h5" component="div">
+              邮箱
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography variant="h5" component="div">
+              {props.data.email}
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 };
 
 const UserPageView: React.FC<{}> = () => {
   const { getUserInfo } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [userdata, setUserdata] = useState<UserApiReturn>();
   useEffect(() => {
     async function fetch() {
       const response = await getUserInfo();
-      setLoaded(true);
+      setUserdata(response);
       console.log(response);
+      // DO SOMETHING
+      setLoaded(true);
     }
     fetch();
-  }, []);
+  }, [getUserInfo]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,9 +98,7 @@ const UserPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          {loaded && (
-            <UserContent code={400} data={{ username: 'string', uid: 400, email: 'string' }} />
-          )}
+          {loaded && <UserContent code={userdata!.code} data={userdata!.data} />}
         </Box>
       </Box>
     </ThemeProvider>
