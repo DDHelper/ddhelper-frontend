@@ -1,24 +1,14 @@
-import React, {
-  Suspense,
-} from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
-import {
-  Grid,
-  Paper,
-} from "@mui/material";
-import Skeleton from "@mui/material/Skeleton";
-import AuthView from "./components/auth";
+import { BrowserRouter, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Grid, Paper } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
+import AuthView from './components/auth';
 import RegisterView from './components/signup';
 import TemplatePageView from './components/template';
 import MainrolllistPageView from './components/mainrolllist';
 import MainTimelinePageView from './components/maintimeline';
+import UserPageView from './components/user';
 function App() {
   /*
   return (
@@ -72,6 +62,9 @@ function App() {
           </Route>
           <Route path="/timeline" exact>
             <MainTimelinePageView />
+          </Route>
+          <Route path="/user" exact>
+            <UserPageView />
           </Route>
         </Suspense>
       </Switch>
