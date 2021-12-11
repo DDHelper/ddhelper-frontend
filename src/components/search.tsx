@@ -34,12 +34,13 @@ import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-
+import SearchIcon from '@mui/icons-material/Search';
 import { blue } from '@mui/material/colors';
-
+import InputBase from '@mui/material/InputBase';
+import { styled, alpha } from '@mui/material/styles';
 const theme = createTheme();
 const drawerWidth = 240;
-const group = ['group setting'];
+const group = ['group a','group b','group c'];
 export interface SimpleDialogProps {
   open: boolean;
   selectedValue: string;
@@ -83,6 +84,42 @@ function SimpleDialog(props: SimpleDialogProps) {
     </Dialog>
   );
 }
+function FollowDialog(props: SimpleDialogProps) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+  
+  const handleListItemClick = (value: string) => {
+    onClose(value);
+  };
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      {/* <DialogTitle>Set backup account</DialogTitle> */}
+      <List sx={{ pt: 0 }}>
+        {group.map((group) => (
+          <ListItem button onClick={() => handleListItemClick(group)} key={group}>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+             
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={group} />
+          </ListItem>
+        ))}
+        <ListItem autoFocus button onClick={() => handleListItemClick('addAccount')}>
+          <ListItemAvatar>
+            <Avatar>
+              <AddIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Follow" />
+        </ListItem>
+      </List>
+    </Dialog>
+  );
+}
 
   const SearchView: React.FC<{}> = () => {
     const [open, setOpen] = React.useState(false);
@@ -96,7 +133,47 @@ function SimpleDialog(props: SimpleDialogProps) {
       setOpen(false);
       setSelectedValue(value);
     };
-
+    const Search = styled('div')(({ theme }) => ({
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: alpha(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: alpha(theme.palette.common.black, 0.25),
+      },
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(1),
+        width: 'auto',
+      },
+    }));
+    
+    const SearchIconWrapper = styled('div')(({ theme }) => ({
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }));
+    
+    const StyledInputBase = styled(InputBase)(({ theme }) => ({
+      color: 'inherit',
+      '& .MuiInputBase-input': {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          width: '12ch',
+          '&:focus': {
+            width: '20ch',
+          },
+        },
+      },
+    }));
 
     return (
       <ThemeProvider theme={theme}>
@@ -112,7 +189,17 @@ function SimpleDialog(props: SimpleDialogProps) {
             <Toolbar />
             <Typography paragraph>
               Search
-              <List sx={{ width: '100%', maxWidth: 1080,  boxShadow: 2,bgcolor: 'background.paper' }}>
+
+              <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+              <List sx={{ width: '100%', maxWidth: 2000,  boxShadow: 2,bgcolor: 'background.paper' }}>
 
               <ListItem>
         <ListItemAvatar>
@@ -123,7 +210,7 @@ function SimpleDialog(props: SimpleDialogProps) {
         <Button variant="outlined" startIcon={<AddIcon />} sx={{
            p: 2,
           position: 'absolute',
-          left: '80%',
+          left: '90%',
           zIndex: 'tooltip',
         }}
 >
@@ -131,7 +218,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       </Button>
         {/* <ListItemText primary="Account 1" secondary="blablablablablablablablablablablablablablabla" /> */}
         <ListItemText
-          primary="Summer BBQ"
+          primary="Summer"
           secondary={
             <React.Fragment>
               <Typography
@@ -140,12 +227,14 @@ function SimpleDialog(props: SimpleDialogProps) {
                 variant="body2"
                 color="text.primary"
               >
-                to Scott, Alex, Jennifer
+                20k
               </Typography>
-              {" — Wish I could come, but I'm out of town this…"}
+              {"  -Wish I could come, but I'm out of town…"}
             </React.Fragment>
           }
+          
         />
+        
       </ListItem>
       <Divider />
       <ListItem>
@@ -157,13 +246,31 @@ function SimpleDialog(props: SimpleDialogProps) {
         <Button variant="outlined" startIcon={<AddIcon />} sx={{
            p: 2,
           position: 'absolute',
-          left: '80%',
+          left: '90%',
           zIndex: 'tooltip',
-        }}
+        }} onClick={handleClickOpen}
 >
         Follow
       </Button>
-        <ListItemText primary="Account 2" secondary="blablabla" />
+      <FollowDialog
+        selectedValue={selectedValue}
+        open={open}
+        onClose={handleClose}
+      />
+        <ListItemText primary="Summer"
+          secondary={
+            <React.Fragment>
+              <Typography
+                sx={{ display: 'inline' }}
+                component="span"
+                variant="body2"
+                color="text.primary"
+              >
+                17
+              </Typography>
+              {"  -这个人什么都没有留下"}
+            </React.Fragment>
+          } />
       </ListItem>
       <Divider />
       <ListItem>
@@ -175,7 +282,7 @@ function SimpleDialog(props: SimpleDialogProps) {
         <Button variant="contained" startIcon={<ArrowDropDownCircleIcon />} sx={{
            p: 2,
           position: 'absolute',
-          left: '80%',
+          left: '90%',
           zIndex: 'tooltip',
         }} onClick={handleClickOpen}
 >
@@ -186,7 +293,19 @@ function SimpleDialog(props: SimpleDialogProps) {
         open={open}
         onClose={handleClose}
       />
-        <ListItemText primary="Account 3" secondary="blablabla" />
+        <ListItemText primary="Summer" secondary={
+            <React.Fragment>
+              <Typography
+                sx={{ display: 'inline' }}
+                component="span"
+                variant="body2"
+                color="text.primary"
+              >
+                356
+              </Typography>
+              {"  -blablablablabla"}
+            </React.Fragment>
+          } />
       </ListItem>
 
             {/* {['Account 1', 'Account 2', 'Account 3'].map((text, index) => (
