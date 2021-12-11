@@ -19,49 +19,54 @@ import { useForm } from 'react-hook-form';
 import { serialize } from 'object-to-formdata';
 import { Md5 } from 'ts-md5/dist/md5';
 import { LoginValues } from '../utils/apiModels';
+import { useHistory } from 'react-router';
 
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
   const { handleSubmit, register, control } = useForm();
   const { postLogin } = useApi();
+  const history = useHistory();
 
   const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
     value.password = Md5.hashStr(value.password);
     const formData = serialize(value);
     const response = await postLogin(formData);
-    console.log(response.code !== 200)
+    console.log(response.code !== 200);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
-    else alert('登录成功');
+    else {
+      alert('登录成功');
+      history.push({
+        pathname: '/main',
+        state: {},
+      });
+    }
   };
 
   return (
     <Box component="form" sx={{ mt: 1 }}>
       <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="username"
-          label="用户名"
-          autoComplete="username"
-          autoFocus
-          {...register('username', { required: true })}
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          label="密码"
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          {...register('password', { required: true })}
-        />
-      <FormControlLabel
-        control={<Checkbox value="remember" color="primary" />}
-        label="记住用户"
+        margin="normal"
+        required
+        fullWidth
+        id="username"
+        label="用户名"
+        autoComplete="username"
+        autoFocus
+        {...register('username', { required: true })}
       />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        label="密码"
+        type="password"
+        id="password"
+        autoComplete="current-password"
+        {...register('password', { required: true })}
+      />
+      <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="记住用户" />
       <Button
         type="submit"
         fullWidth
