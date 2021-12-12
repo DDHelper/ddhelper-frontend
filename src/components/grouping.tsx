@@ -14,14 +14,17 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { GroupListApiReturn } from '../utils/apiModels';
+import { GroupListApiReturn, GroupMemberApiReturn } from '../utils/apiModels';
 import { useApi } from '../utils/apiClient';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Card from '@mui/material/Card';
+import EnhancedTable from './parts/enhancedtable';
+import { Button, Modal, TextField } from '@mui/material';
+import { serialize } from 'object-to-formdata';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -59,55 +62,112 @@ function a11yProps(index: number) {
   };
 }
 
-const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
-  const [value, setValue] = React.useState(0);
+// const FC
+
+interface GroupingData {
+  data: Array<{
+    gid: number;
+    group_name: string;
+    count: number;
+  }>;
+  details: Array<{
+    has_more: boolean;
+    gid: number;
+    group_name: string;
+    count: number;
+    page: number;
+    pages: number;
+    data: Array<{
+      mid: number;
+      name: string;
+      face: string;
+    }>;
+  }>;
+}
+const VerticalTabs: React.FC<GroupingData> = (props) => {
+  const [value, setValue] = React.useState(1);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const newGroupRef = useRef<HTMLInputElement>(null);
+
+  const [newGroupNameEmpty, setNewGroupNameEmpty] = useState<boolean>(true);
+
+  const { postAddGroup } = useApi();
+  const checkNewGroupNameEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newGroupName = e.target.value;
+    if (newGroupName !== undefined && newGroupName !== '') setNewGroupNameEmpty(false);
+    else setNewGroupNameEmpty(true);
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const handleAddGroup = async () => {
+    let value = { group_name: newGroupRef.current!.value };
+    const formData = serialize(value);
+    handleClose();
+    const response = await postAddGroup(formData);
+    // if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+
+    alert('新增成功');
+
+  };
+
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            新分组的名称
+          </Typography>
+          <TextField variant="standard" inputRef={newGroupRef} onChange={checkNewGroupNameEmpty} />
+          <Button onClick={handleAddGroup} disabled={newGroupNameEmpty}>
+            确认
+          </Button>
+        </Box>
+      </Modal>
       <Tabs
         orientation="vertical"
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
-        {props.data.map((item) => {
-          console.log('test');
-          return <Tab label={item.group_name} {...a11yProps(item.gid)} />;
+        <Button onClick={handleOpen}>新增分组</Button>
+        {props.data.map((item, idx) => {
+          return (
+            <Tab label={item.group_name} {...a11yProps(idx + 1)} key={idx + 1} value={idx + 1} />
+          );
         })}
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
-        <Tab label="Item Four" {...a11yProps(3)} />
-        <Tab label="Item Five" {...a11yProps(4)} />
-        <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
-        gnamwe
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
+      {props.data.map((item, idx) => {
+        const rows = props.details.find((i) => i.gid === item.gid)!.data;
+        return (
+          <TabPanel value={value} index={idx + 1}>
+            <EnhancedTable rows={rows} />
+            {idx + 1 !== 1 && <Button>删除分组</Button>}
+          </TabPanel>
+        );
+      })}
     </Box>
   );
 };
@@ -121,16 +181,28 @@ const GroupingPageView: React.FC<{}> = () => {
   const { getGroupList, getGroupMember } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
+  const [GroupMemberData, setGroupMemberData] = useState<Array<GroupMemberApiReturn>>();
   useEffect(() => {
     async function fetch() {
-      const response = await getGroupList();
-      setGroupListData(response);
-      console.log(response);
+      const ListResponse = await getGroupList();
+      setGroupListData(ListResponse);
+      let MemberResponses = [];
+      for (let group of ListResponse.data) {
+        MemberResponses.push(
+          await getGroupMember({
+            gid: group.gid,
+            page: 0,
+            size: group.count,
+          })
+        );
+      }
+      setGroupMemberData(MemberResponses);
+      console.log(MemberResponses);
       // DO SOMETHING
       setLoaded(true);
     }
     fetch();
-  }, [getGroupList]);
+  }, [getGroupList, getGroupMember]);
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
@@ -143,7 +215,12 @@ const GroupingPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          {loaded && <VerticalTabs code={groupListData!.code} data={groupListData!.data} />}
+          {loaded && (
+            <VerticalTabs
+              data={groupListData!.data}
+              details={GroupMemberData!.map((item) => item.data)}
+            />
+          )}
         </Box>
       </Box>
     </ThemeProvider>
