@@ -106,6 +106,17 @@ export interface GroupMemberApiReturn {
     }>;
   };
 }
+
+// post AddGroup
+export interface AddGroupApiReturn {
+  code: number;
+  success: boolean;
+  data: {
+    gid: number;
+    group_name: string;
+  };
+}
+
 export interface UserMetadatumModel {
   id: number;
 }

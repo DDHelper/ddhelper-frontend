@@ -1,4 +1,5 @@
 import {
+  AddGroupApiReturn,
   DoSubscribeApiReturn,
   GroupListApiReturn,
   GroupMemberApiReturn,
@@ -127,6 +128,11 @@ export function useApi(token?: string) {
               : { params: qvalues }
           )
         ).data,
+      [axios]
+    ),
+    postAddGroup: useCallback(
+      async (values: FormData): Promise<AddGroupApiReturn> =>
+        (await axios.post<AddGroupApiReturn>('/subscribe/group/add/', values)).data,
       [axios]
     ),
     postForgotPassword: useCallback(
