@@ -1,15 +1,17 @@
-import { SearchSubsribeApiReturn, UserApiReturn } from './apiModels.d';
+import {
+  DoSubscribeApiReturn,
+  GroupListApiReturn,
+  GroupMemberApiReturn,
+  GroupMemberQueryModel,
+} from './apiModels.d';
 import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
 import {
-  LoginValues,
   LoginApiReturn,
-  RegisterValues,
   RegisterApiReturn,
-  PinValues,
-  UserModel,
-  UserMetadatumModel,
   PinApiReturn,
+  SearchSubsribeApiReturn,
+  UserApiReturn,
 } from './apiModels';
 
 /**
@@ -89,6 +91,40 @@ export function useApi(token?: string) {
                   headers: { authorization: `Bearer ${token}` },
                 }
               : {}
+          )
+        ).data,
+      [axios]
+    ),
+    postDoSubscribe: useCallback(
+      async (values: FormData): Promise<DoSubscribeApiReturn> =>
+        (await axios.post<DoSubscribeApiReturn>('/subscribe/subscribe/', values)).data,
+      [axios]
+    ),
+    getGroupList: useCallback(
+      async (token?: string): Promise<GroupListApiReturn> =>
+        (
+          await axios.get<GroupListApiReturn>(
+            '/subscribe/group_list',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                }
+              : {}
+          )
+        ).data,
+      [axios]
+    ),
+    getGroupMember: useCallback(
+      async (qvalues: GroupMemberQueryModel, token?: string): Promise<GroupMemberApiReturn> =>
+        (
+          await axios.get<GroupMemberApiReturn>(
+            '/subscribe/group/members',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                  params: qvalues,
+                }
+              : { params: qvalues }
           )
         ).data,
       [axios]

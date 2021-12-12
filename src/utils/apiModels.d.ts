@@ -83,6 +83,29 @@ export interface GroupListApiReturn {
   }>;
 }
 
+// get GroupMember
+export interface GroupMemberQueryModel {
+  gid: number;
+  page: number;
+  size: number;
+}
+
+export interface GroupMemberApiReturn {
+  code: number;
+  data: {
+    has_more: boolean;
+    gid: number;
+    group_name: string;
+    count: number;
+    page: number;
+    pages: number;
+    data: Array<{
+      mid: number;
+      name: string;
+      face: string;
+    }>;
+  };
+}
 export interface UserMetadatumModel {
   id: number;
 }
