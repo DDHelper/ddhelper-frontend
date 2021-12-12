@@ -9,6 +9,7 @@ import TemplatePageView from './components/template';
 import MainrolllistPageView from './components/mainrolllist';
 import MainTimelinePageView from './components/maintimeline';
 import UserPageView from './components/user';
+import GroupingPageView from './components/grouping';
 function App() {
   /*
   return (
@@ -65,6 +66,9 @@ function App() {
           </Route>
           <Route path="/user" exact>
             <UserPageView />
+          </Route>
+          <Route path="/usergrouping" exact>
+            <GroupingPageView />
           </Route>
         </Suspense>
       </Switch>
