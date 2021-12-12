@@ -23,6 +23,7 @@ import { UserApiReturn } from '../utils/apiModels';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -31,37 +32,37 @@ const UserContent: React.FC<UserApiReturn> = (props) => {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography variant="h4" color="text.secondary" gutterBottom>
+        <Typography variant="h5" color="text.secondary" gutterBottom>
           用户信息
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <Typography variant="h5" component="div">
+            <Typography variant="subtitle2" component="div">
               用户名
             </Typography>
           </Grid>
           <Grid item xs={10}>
-            <Typography variant="h5" component="div">
+            <Typography variant="subtitle1" component="div">
               {props.data.username}
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography variant="h5" component="div">
+            <Typography variant="subtitle2" component="div">
               uid
             </Typography>
           </Grid>
           <Grid item xs={10}>
-            <Typography variant="h5" color="text.secondary">
+            <Typography variant="subtitle1" color="text.secondary">
               {props.data.uid}
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography variant="h5" component="div">
+            <Typography variant="subtitle2" component="div">
               邮箱
             </Typography>
           </Grid>
           <Grid item xs={10}>
-            <Typography variant="h5" component="div">
+            <Typography variant="subtitle1" component="div">
               {props.data.email}
             </Typography>
           </Grid>
@@ -99,6 +100,26 @@ const UserPageView: React.FC<{}> = () => {
         >
           <Toolbar />
           {loaded && <UserContent code={userdata!.code} data={userdata!.data} />}
+          <Divider variant="middle" />
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent>
+              <Typography variant="h5" color="text.secondary" gutterBottom>
+                操作
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <Button variant="text" href="/">
+                    修改密码
+                  </Button>
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant="text" href="/">
+                    退出登录
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Box>
       </Box>
     </ThemeProvider>
