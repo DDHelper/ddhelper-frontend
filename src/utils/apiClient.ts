@@ -1,5 +1,6 @@
 import {
   AddGroupApiReturn,
+  DelGroupApiReturn,
   DoSubscribeApiReturn,
   GroupListApiReturn,
   GroupMemberApiReturn,
@@ -133,6 +134,11 @@ export function useApi(token?: string) {
     postAddGroup: useCallback(
       async (values: FormData): Promise<AddGroupApiReturn> =>
         (await axios.post<AddGroupApiReturn>('/subscribe/group/add/', values)).data,
+      [axios]
+    ),
+    deleteDelGroup: useCallback(
+      async (values: string): Promise<DelGroupApiReturn> =>
+        (await axios.delete<DelGroupApiReturn>('/subscribe/group/delete/', {data: values})).data,
       [axios]
     ),
     postForgotPassword: useCallback(

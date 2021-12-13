@@ -87,7 +87,7 @@ export interface GroupListApiReturn {
 export interface GroupMemberQueryModel {
   gid: number;
   page: number;
-  size: number;
+  size?: number;
 }
 
 export interface GroupMemberApiReturn {
@@ -115,6 +115,12 @@ export interface AddGroupApiReturn {
     gid: number;
     group_name: string;
   };
+}
+
+// post DelGroup
+export interface DelGroupApiReturn {
+  code: number;
+  msg: string;
 }
 
 export interface UserMetadatumModel {
