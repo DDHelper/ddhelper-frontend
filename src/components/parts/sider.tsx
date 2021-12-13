@@ -21,6 +21,7 @@ import {
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import SearchOutlineIcon from '@mui/icons-material/SearchOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 interface props {
@@ -64,6 +65,14 @@ const PageSider: React.FC<props> = (props) => {
                 <PeopleOutlineIcon />
               </ListItemIcon>
               <ListItemText primary="分组管理" />
+            </ListItem>
+          </Link>
+          <Link href="/search" underline="none">
+            <ListItem button key="usergrouping">
+              <ListItemIcon>
+                <SearchOutlineIcon />
+              </ListItemIcon>
+              <ListItemText primary="搜索订阅" />
             </ListItem>
           </Link>
         </List>
