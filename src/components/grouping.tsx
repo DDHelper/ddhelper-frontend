@@ -93,7 +93,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
 
   const [newGroupNameEmpty, setNewGroupNameEmpty] = useState<boolean>(true);
 
-  const { postAddGroup } = useApi();
+  const { postAddGroup, deleteDelGroup } = useApi();
   const checkNewGroupNameEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newGroupName = e.target.value;
     if (newGroupName !== undefined && newGroupName !== '') setNewGroupNameEmpty(false);
@@ -110,9 +110,17 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
     handleClose();
     const response = await postAddGroup(formData);
     // if (response.code !== 200) alert(`操作失败: ${response.msg}`);
-
     alert('新增成功');
+    window.location.reload();
+  };
 
+  const handleDelGroup = async () => {
+    let delvalue = `gid=${props.data[value - 1].gid}`;
+    // delvalue = Object.assign(delvalue, {})
+    const response = await deleteDelGroup(delvalue);
+    // if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    alert('删除成功');
+    window.location.reload();
   };
 
   return (
@@ -164,7 +172,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
         return (
           <TabPanel value={value} index={idx + 1}>
             <EnhancedTable rows={rows} />
-            {idx + 1 !== 1 && <Button>删除分组</Button>}
+            {idx + 1 !== 1 && <Button onClick={handleDelGroup}>删除分组</Button>}
           </TabPanel>
         );
       })}
@@ -189,11 +197,15 @@ const GroupingPageView: React.FC<{}> = () => {
       let MemberResponses = [];
       for (let group of ListResponse.data) {
         MemberResponses.push(
-          await getGroupMember({
-            gid: group.gid,
-            page: 0,
-            size: group.count,
-          })
+          await getGroupMember(
+            group.count === 0
+              ? { gid: group.gid, page: 0 }
+              : {
+                  gid: group.gid,
+                  page: 0,
+                  size: group.count,
+                }
+          )
         );
       }
       setGroupMemberData(MemberResponses);
