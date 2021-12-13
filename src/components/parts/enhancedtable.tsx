@@ -183,11 +183,24 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: 0,
+          }}
+        >
+          <Tooltip title="删除">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="移动">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
@@ -204,7 +217,7 @@ const EnhancedTable = (props: { rows: Data[] }) => {
   const [orderBy, setOrderBy] = React.useState<keyof Data>('mid');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   /*
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -330,13 +343,12 @@ const EnhancedTable = (props: { rows: Data[] }) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10]}
           component="div"
           count={props.rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </Box>
