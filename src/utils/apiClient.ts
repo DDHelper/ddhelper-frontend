@@ -5,6 +5,7 @@ import {
   GroupListApiReturn,
   GroupMemberApiReturn,
   GroupMemberQueryModel,
+  SearchQueryModel,
 } from './apiModels.d';
 import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
@@ -12,7 +13,7 @@ import {
   LoginApiReturn,
   RegisterApiReturn,
   PinApiReturn,
-  SearchSubsribeApiReturn,
+  SearchSubscribeApiReturn,
   UserApiReturn,
 } from './apiModels';
 
@@ -83,16 +84,17 @@ export function useApi(token?: string) {
         ).data,
       [axios]
     ),
-    getSearchSubsribe: useCallback(
-      async (token?: string): Promise<SearchSubsribeApiReturn> =>
+    getSearchSubscribe: useCallback(
+      async (qvalues: SearchQueryModel, token?: string): Promise<SearchSubscribeApiReturn> =>
         (
-          await axios.get<SearchSubsribeApiReturn>(
+          await axios.get<SearchSubscribeApiReturn>(
             '/subscribe/search',
             token
               ? {
                   headers: { authorization: `Bearer ${token}` },
+                  params: qvalues,
                 }
-              : {}
+              : { params: qvalues }
           )
         ).data,
       [axios]
@@ -138,7 +140,7 @@ export function useApi(token?: string) {
     ),
     deleteDelGroup: useCallback(
       async (values: string): Promise<DelGroupApiReturn> =>
-        (await axios.delete<DelGroupApiReturn>('/subscribe/group/delete/', {data: values})).data,
+        (await axios.delete<DelGroupApiReturn>('/subscribe/group/delete/', { data: values })).data,
       [axios]
     ),
     postForgotPassword: useCallback(

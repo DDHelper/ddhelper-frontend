@@ -50,16 +50,19 @@ export interface UserApiReturn {
 }
 
 // get SearchSubscribe
-export interface SearchSubsribeApiReturn {
+export interface SearchQueryModel {
+  search_name: string;
+}
+export interface SearchSubscribeApiReturn {
   code: number;
-  data: {
+  data: Array<{
     mid: number;
     uname: string;
     fans: number;
     usign: string;
     upic: string;
     raw: object;
-  };
+  }>;
 }
 
 // post DoSubscribe
