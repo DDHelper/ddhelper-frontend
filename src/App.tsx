@@ -10,6 +10,7 @@ import MainrolllistPageView from './components/mainrolllist';
 import MainTimelinePageView from './components/maintimeline';
 import UserPageView from './components/user';
 import GroupingPageView from './components/grouping';
+import SearchPageView from './components/search';
 function App() {
   /*
   return (
@@ -69,6 +70,9 @@ function App() {
           </Route>
           <Route path="/usergrouping" exact>
             <GroupingPageView />
+          </Route>
+          <Route path="/search" exact>
+            <SearchPageView />
           </Route>
         </Suspense>
       </Switch>
