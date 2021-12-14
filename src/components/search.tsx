@@ -123,7 +123,7 @@ const SearchPageView: React.FC<{}> = () => {
 
   const onSubmit = async (data: { search_name: string }) => {
     const response = await getSearchSubscribe(data);
-    console.log(response)
+    console.log(response);
     setSearchData(response);
     const ListResponse = await getGroupList();
     setGroupListData(ListResponse);
@@ -136,9 +136,19 @@ const SearchPageView: React.FC<{}> = () => {
   };
 
   const handleDoSubscribe = async (value: DoSubscribeValues) => {
-    const formData = serialize(value);
+    let formData = new FormData();
+    Object.keys(value).forEach((key) => {
+      if (key === 'gid') {
+        const groups = value[key];
+        for (let i = 0; i < groups.length; i++) {
+          formData.append(key, groups[i].toString());
+        }
+      } else {
+        formData.append(key, value[key as keyof DoSubscribeValues].toString());
+      }
+    });
     const response = await postDoSubscribe(formData);
-    console.log(response);
+    // console.log(response);
     setOpen(false);
   };
 
