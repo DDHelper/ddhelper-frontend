@@ -2,6 +2,8 @@ import {
   AddGroupApiReturn,
   DelGroupApiReturn,
   DoSubscribeApiReturn,
+  DynamicApiReturn,
+  DynamicQueryModel,
   GroupListApiReturn,
   GroupMemberApiReturn,
   GroupMemberQueryModel,
@@ -141,6 +143,21 @@ export function useApi(token?: string) {
     deleteDelGroup: useCallback(
       async (values: string): Promise<DelGroupApiReturn> =>
         (await axios.delete<DelGroupApiReturn>('/subscribe/group/delete/', { data: values })).data,
+      [axios]
+    ),
+    getDynamic: useCallback(
+      async (qvalues: DynamicQueryModel, token?: string): Promise<DynamicApiReturn> =>
+        (
+          await axios.get<DynamicApiReturn>(
+            '/dynamic/list',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                  params: qvalues,
+                }
+              : { params: qvalues }
+          )
+        ).data,
       [axios]
     ),
     postForgotPassword: useCallback(

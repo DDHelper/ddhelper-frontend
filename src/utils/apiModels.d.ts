@@ -126,6 +126,23 @@ export interface DelGroupApiReturn {
   msg: string;
 }
 
+// get Dynamic
+export interface DynamicQueryModel {
+  gid: number;
+  offset: number;
+  size : number;
+}
+
+export interface DynamicApiReturn {
+  code: number;
+  data: {
+    has_more: boolean;
+    gid: number;
+    group_name: number;
+    offset: number;
+    data: Array;
+  }
+}
 export interface UserMetadatumModel {
   id: number;
 }
