@@ -140,7 +140,13 @@ export interface DynamicApiReturn {
     gid: number;
     group_name: number;
     offset: number;
-    data: Array;
+    data: Array<{
+      dynamic_id: number;
+      mid: number;
+      dynamic_type: number;
+      timestamp: number;
+      raw: any;
+    }>;
   }
 }
 export interface UserMetadatumModel {
