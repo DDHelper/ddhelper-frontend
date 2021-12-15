@@ -57,7 +57,7 @@ function App() {
             <RegisterView />
           </Route>
           <Route path="/" exact>
-            <TemplatePageView />
+            <MainrolllistPageView />
           </Route>
           <Route path="/main" exact>
             <MainrolllistPageView />

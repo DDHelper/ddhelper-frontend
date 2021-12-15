@@ -127,13 +127,14 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
 const RolllistItem: React.FC<{ gid: number }> = (props) => {
   const { getDynamic } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [pageOffset, setPageOffset] = useState<number>(0);
   const [dynamicData, setDynamicData] = useState<DynamicApiReturn>();
 
   useEffect(() => {
     async function fetch() {
       const dynamicResponse = await getDynamic({
         gid: props.gid,
-        offset: 0,
+        offset: pageOffset,
         size: 10,
       });
       setDynamicData(dynamicResponse);
@@ -143,7 +144,101 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
     }
     fetch();
   }, [getDynamic, props.gid]);
-  return <List> </List>;
+
+  /*
+  return (
+    <List sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper' }}>
+      <ListItem alignItems="flex-start">
+        <Card sx={{ maxWidth: 1000 }}>
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                R
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title="up主名称"
+            subheader="动态发布时间"
+          />
+          <CardMedia
+            component="img"
+            height="194"
+            image="/static/images/cards/paella.jpg"
+            alt="动态图片"
+          />
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
+              测试长度 测试长度 测试长度 测试长度 测试长度
+            </Typography>
+          </CardContent>
+        </Card>
+      </ListItem>
+
+    </List>
+  );
+  */
+  return loaded ? (
+    <List
+      sx={{
+        width: '100%',
+        maxWidth: 2000,
+        boxShadow: 2,
+        bgcolor: 'background.paper',
+      }}
+    >
+      {dynamicData!.data.data.map((item, idx) => {
+        return (
+          <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar>
+                <Avatar
+                  variant="rounded"
+                  // src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
+                />
+              </Avatar>
+            </ListItemAvatar>
+            <Card sx={{ maxWidth: 1000 }}>
+              <CardHeader
+                avatar={
+                  <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                    R
+                  </Avatar>
+                }
+                action={
+                  <IconButton aria-label="settings">
+                    <MoreVertIcon />
+                  </IconButton>
+                }
+                title="up主名称"
+                subheader="动态发布时间"
+              />
+              <CardMedia
+                component="img"
+                height="194"
+                image="/static/images/cards/paella.jpg"
+                alt="动态图片"
+              />
+              <CardContent>
+                <Typography variant="body2" color="text.secondary">
+                  动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
+                  测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
+                </Typography>
+              </CardContent>
+            </Card>
+          </ListItem>
+        );
+      })}
+    </List>
+  ) : (
+    <Typography variant="h6" sx={{ mx: 8 }}>
+      no data
+    </Typography>
+  );
 };
 const MainrolllistPageView: React.FC<{}> = () => {
   const [expanded, setExpanded] = React.useState(false);
@@ -178,188 +273,7 @@ const MainrolllistPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-
-          <List sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper' }}>
-            <ListItem alignItems="flex-start">
-              <Card sx={{ maxWidth: 1000 }}>
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                      R
-                    </Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title="up主名称"
-                  subheader="动态发布时间"
-                />
-                <CardMedia
-                  component="img"
-                  height="194"
-                  image="/static/images/cards/paella.jpg"
-                  alt="动态图片"
-                />
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                    测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                  </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph></Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography></Typography>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-              <Card sx={{ maxWidth: 1000 }}>
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                      R
-                    </Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title="up主名称"
-                  subheader="动态发布时间"
-                />
-                <CardMedia
-                  component="img"
-                  height="194"
-                  image="/static/images/cards/paella.jpg"
-                  alt="动态图片"
-                />
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                    测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                  </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                      Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside
-                      for 10 minutes.
-                    </Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography>
-                      Set aside off of the heat to let rest for 10 minutes, and then serve.
-                    </Typography>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-              <Card sx={{ maxWidth: 1000 }}>
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                      R
-                    </Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title="up主名称"
-                  subheader="动态发布时间"
-                />
-                <CardMedia
-                  component="img"
-                  height="194"
-                  image="/static/images/cards/paella.jpg"
-                  alt="动态图片"
-                />
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                    测试长度 测试长度 测试长度 测试长度 测试长度 测试长度测试长度测试长度测试长度
-                    测试长度 测试长度 测试长度 测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                    测试长度 测试长度
-                  </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                      Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside
-                      for 10 minutes.
-                    </Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography paragraph>评论区</Typography>
-                    <Typography>
-                      Set aside off of the heat to let rest for 10 minutes, and then serve.
-                    </Typography>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </ListItem>
-          </List>
+          {loaded && <VerticalTabs code={groupListData!.code} data={groupListData!.data} />}
         </Box>
       </Box>
     </ThemeProvider>
