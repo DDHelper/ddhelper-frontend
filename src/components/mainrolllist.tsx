@@ -130,6 +130,17 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
   const [pageOffset, setPageOffset] = useState<number>(0);
   const [dynamicData, setDynamicData] = useState<DynamicApiReturn>();
 
+  function timestampToTime(timestamp: number) {
+    let date = new Date(timestamp * 1000); //timestamp 为10位需*1000，timestamp 为13位的话不需乘1000
+    let Y = date.getFullYear() + '-';
+    let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+    let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return Y + M + D + h + m + s;
+  }
+
   useEffect(() => {
     async function fetch() {
       const dynamicResponse = await getDynamic({
@@ -186,43 +197,53 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
     <List
       sx={{
         width: '100%',
-        maxWidth: 2000,
-        boxShadow: 2,
         bgcolor: 'background.paper',
       }}
     >
       {dynamicData!.data.data.map((item, idx) => {
+        const card = JSON.parse(item.raw.card);
+        const dtype = item.dynamic_type;
+        console.log(dtype);
+        let uname = '';
+        let uid = 0;
+        let face = '';
+        switch (dtype) {
+          case 1:
+            uname = card.user.uname;
+            uid = card.user.uid;
+            face = card.user.face;
+            break;
+          case 2:
+            uname = card.user.name;
+            uid = card.user.uid;
+            face = card.user.head_url;
+            break;
+          case 4:
+            uname = card.user.uname;
+            uid = card.user.uid;
+            face = card.user.face;
+            break;
+          case 8:
+            uname = card.owner.name;
+            uid = card.owner.mid;
+            face = card.owner.face;
+            break;
+        }
+
         return (
           <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar>
-                <Avatar
-                  variant="rounded"
-                  // src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
-                />
-              </Avatar>
-            </ListItemAvatar>
-            <Card sx={{ maxWidth: 1000 }}>
+            <Card>
               <CardHeader
                 avatar={
-                  <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                    R
-                  </Avatar>
+                  <Avatar
+                    variant="circular"
+                    src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
+                  />
                 }
-                action={
-                  <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title="up主名称"
-                subheader="动态发布时间"
+                title={uname}
+                subheader={timestampToTime(item.timestamp)}
               />
-              <CardMedia
-                component="img"
-                height="194"
-                image="/static/images/cards/paella.jpg"
-                alt="动态图片"
-              />
+              <CardMedia component="img" height="194" image="/static/images/cards/paella.jpg" />
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
                   动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
