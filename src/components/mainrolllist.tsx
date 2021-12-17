@@ -43,9 +43,11 @@ import Tab from '@mui/material/Tab';
 import Link from '@mui/material/Link';
 import { Chip } from '@mui/material';
 
+/*
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
+
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
@@ -57,6 +59,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+*/
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -151,7 +154,7 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
         size: 10,
       });
       setDynamicData(dynamicResponse);
-      console.log(dynamicResponse);
+      // console.log(dynamicResponse);
       // DO SOMETHING
       setLoaded(true);
     }
@@ -169,10 +172,8 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
         const card = JSON.parse(item.raw.card);
         const desc = item.raw.desc;
         const dtype = item.dynamic_type;
-        console.log(dtype);
-        let uname = '';
-        let uid = 0;
-        let face = '';
+        console.log(card);
+        // console.log(dtype);
         switch (dtype) {
           case 1:
             return (
@@ -182,15 +183,17 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
             );
 
           case 2:
-            uname = card.user.name;
-            uid = card.user.uid;
-            face = card.user.head_url;
-            break;
+            return (
+              <ListItem alignItems="flex-start">
+                <ItemType2 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+              </ListItem>
+            );
           case 4:
-            uname = card.user.uname;
-            uid = card.user.uid;
-            face = card.user.face;
-            break;
+            return (
+              <ListItem alignItems="flex-start">
+                <ItemType4 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+              </ListItem>
+            );
           case 8:
             return (
               <ListItem alignItems="flex-start">
@@ -198,30 +201,6 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
               </ListItem>
             );
         }
-
-        return (
-          <ListItem alignItems="flex-start">
-            <Card>
-              <CardHeader
-                avatar={
-                  <Avatar
-                    variant="circular"
-                    src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-                  />
-                }
-                title={uname}
-                subheader={timestampToTime(item.timestamp)}
-              />
-              <CardMedia component="img" height="194" image="/static/images/cards/paella.jpg" />
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  动态内容测试长度测试长度测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                  测试长度 测试长度 测试长度 测试长度 测试长度 测试长度
-                </Typography>
-              </CardContent>
-            </Card>
-          </ListItem>
-        );
       })}
     </List>
   ) : (
@@ -231,14 +210,16 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
   );
 };
 
-const ItemType1: React.FC<{ card: any; desc: any; time: string }> = (props) => {
+const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => {
   // repost
   let uname = props.card.user.uname;
   let uid = props.card.user.uid;
   let face = props.card.user.face;
   let time = props.time;
   let item = props.card.item;
-  let origin = props.card.origin;
+  let card_origin = JSON.parse(props.card.origin);
+  let origin_dtype = props.card.item.orig_type;
+
   return (
     <Card>
       <CardHeader
@@ -250,39 +231,36 @@ const ItemType1: React.FC<{ card: any; desc: any; time: string }> = (props) => {
         }
         title={uname}
         subheader={time}
+        action={<Chip label="转发" variant="outlined" />}
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {item.content}
-        </Typography>
-        <Divider />
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar
-                variant="circular"
-                src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-              />
-            }
-            title={uname}
-            subheader={timestampToTime(item.timestamp)}
-          />
-          <CardMedia component="img" height="194" image="/static/images/cards/paella.jpg" />
-          <CardContent></CardContent>
-        </Card>
-      </CardContent>
+      {origin_dtype === 2 && (
+        <Box sx={{ margin: 2 }}>
+          <ItemType2 card={card_origin} />
+        </Box>
+      )}
+      {origin_dtype === 4 && (
+        <Box sx={{ margin: 2 }}>
+          <ItemType4 card={card_origin} />
+        </Box>
+      )}
+      {origin_dtype === 8 && (
+        <Box sx={{ margin: 2 }}>
+          <ItemType8 card={card_origin} />
+        </Box>
+      )}
     </Card>
   );
 };
 
-const ItemType2: React.FC<{ card: any; desc: any; time: string }> = (props) => {
-  // repost
-  let uname = props.card.user.uname;
+const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
+  // pic and text
+  let uname = props.card.user.name;
   let uid = props.card.user.uid;
-  let face = props.card.user.face;
-  let time = props.time;
+  let face = props.card.user.head_url;
+  let time = timestampToTime(props.card.item.upload_time);
   let item = props.card.item;
-  let origin = props.card.origin;
+  let content = props.card.item.description;
+  let pics = props.card.item.pictures;
   return (
     <Card>
       <CardHeader
@@ -294,41 +272,36 @@ const ItemType2: React.FC<{ card: any; desc: any; time: string }> = (props) => {
         }
         title={uname}
         subheader={time}
+        action={<Chip label="图文" variant="outlined" />}
       />
-      <CardContent>
+      <CardContent sx={{display: 'flex', flexDirection: 'column' }}>
         <Typography variant="body2" color="text.secondary">
-          {item.content}
+          {content}
         </Typography>
-        <Divider />
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar
-                variant="circular"
-                src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
+          {pics.map((item: any) => {
+            return (
+              <CardMedia
+                component="img"
+                image={`http://ddd.edrows.top/txcos/pic/?url=${item.img_src}@360w.webp`}
+                sx= {{my: 2}}
               />
-            }
-            title={uname}
-            subheader={timestampToTime(item.timestamp)}
-          />
-          <CardMedia component="img" height="194" image="/static/images/cards/paella.jpg" />
-          <CardContent></CardContent>
-        </Card>
+            );
+          })}
       </CardContent>
     </Card>
   );
 };
 
-const ItemType4: React.FC<{ card: any; desc: any; time: string }> = (props) => {
-  // repost
+const ItemType4: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
+  // pure text
   let uname = props.card.user.uname;
-  let uid = props.card.user.uid;
+  let uid = props.card.user.mid;
   let face = props.card.user.face;
-  let time = props.time;
-  let item = props.card.item;
+  let time = timestampToTime(props.card.item.timestamp);
+  let content = props.card.item.content;
   let origin = props.card.origin;
   return (
-    <Card>
+    <Card sx={{ display: 'flex', flexDirection: 'column' }}>
       <CardHeader
         avatar={
           <Avatar
@@ -338,37 +311,26 @@ const ItemType4: React.FC<{ card: any; desc: any; time: string }> = (props) => {
         }
         title={uname}
         subheader={time}
+        action={<Chip label="文字" variant="outlined" />}
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {item.content}
-        </Typography>
-        <Divider />
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar
-                variant="circular"
-                src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-              />
-            }
-            title={uname}
-            subheader={timestampToTime(item.timestamp)}
-          />
-          <CardMedia component="img" height="194" image="/static/images/cards/paella.jpg" />
-          <CardContent></CardContent>
-        </Card>
+
+      <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="subtitle2" sx={{ ml: 2, maxWidth: 360 }}>
+            {content}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
 };
 
-const ItemType8: React.FC<{ card: any; desc: any; time: string }> = (props) => {
+const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
   // video
   let uname = props.card.owner.name;
   let uid = props.card.owner.mid;
   let face = props.card.owner.face;
-  let time = props.time;
+  let time = timestampToTime(props.card.ctime);
   let title = props.card.title;
   let origin = props.card.origin;
   return (
@@ -405,7 +367,7 @@ const ItemType8: React.FC<{ card: any; desc: any; time: string }> = (props) => {
             href={props.card.short_link_v2}
             color="inherit"
             underline="hover"
-            sx={{ ml: 2, maxWidth: 360}}
+            sx={{ ml: 2, maxWidth: 360 }}
           >
             {title}
           </Link>
