@@ -26,7 +26,7 @@ export function useApi(token?: string) {
   const axios = useMemo(() => {
     const axios = Axios.create({
       // baseURL: process.env.REACT_APP_API_BASE,
-      baseURL: '',
+      baseURL: '/api',
     });
 
     axios.interceptors.request.use((req) => {
