@@ -8,6 +8,8 @@ import {
   GroupMemberApiReturn,
   GroupMemberQueryModel,
   SearchQueryModel,
+  TimelineApiReturn,
+  TimelineQueryModel,
 } from './apiModels.d';
 import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
@@ -150,6 +152,21 @@ export function useApi(token?: string) {
         (
           await axios.get<DynamicApiReturn>(
             '/dynamic/list',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                  params: qvalues,
+                }
+              : { params: qvalues }
+          )
+        ).data,
+      [axios]
+    ),
+    getTimeline: useCallback(
+      async (qvalues: TimelineQueryModel, token?: string): Promise<TimelineApiReturn> =>
+        (
+          await axios.get<TimelineApiReturn>(
+            '/timeline/list',
             token
               ? {
                   headers: { authorization: `Bearer ${token}` },

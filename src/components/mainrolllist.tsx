@@ -332,7 +332,7 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
   let face = props.card.owner.face;
   let time = timestampToTime(props.card.ctime);
   let title = props.card.title;
-  let origin = props.card.origin;
+  let desc = props.card.desc;
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column' }}>
       <CardHeader
@@ -371,7 +371,7 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
           >
             {title}
           </Link>
-          <Typography sx={{ ml: 2 }}>miaoshu</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>{desc}</Typography>
         </Box>
       </CardContent>
     </Card>

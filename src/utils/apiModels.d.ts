@@ -138,7 +138,7 @@ export interface DynamicApiReturn {
   data: {
     has_more: boolean;
     gid: number;
-    group_name: number;
+    group_name: string;
     offset: number;
     data: Array<{
       dynamic_id: number;
@@ -149,6 +149,26 @@ export interface DynamicApiReturn {
     }>;
   }
 }
+
+// get Timeline
+export interface TimelineQueryModel {
+  gid: number;
+  offset: number;
+  size : number;
+}
+
+export interface TimelineApiReturn {
+  code: number;
+  data: {
+    has_more: boolean;
+    gid: number;
+    group_name: string;
+    offset: number;
+    data: Array<any>;
+  }
+}
+
+
 export interface UserMetadatumModel {
   id: number;
 }
