@@ -230,7 +230,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [pageOffset, setPageOffset] = useState<number>(0);
   const [timelineData, setTimelineData] = useState<TimelineApiReturn>();
-  const [times, setTimes] = useState<Array<{ year: number; month: number; day: number }>>([]);
+  const [sortedEvents, setSortedEvents] = useState<Array<any>>();
 
   useEffect(() => {
     async function fetch() {
@@ -239,14 +239,30 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
         offset: pageOffset,
         size: 100,
       });
-      setTimelineData(timelineResponse);
       console.log(timelineResponse);
       let times = [];
-      for (let item in timelineResponse!.data.data) {
-        times.push(timestampToDate(timelineResponse!.data.data[item].event_time));
+      for (let idx in timelineResponse!.data.data) {
+        // times.push(timestampToDate(timelineResponse!.data.data[idx].event_time));
+        times.push(new Date(timelineResponse!.data.data[idx].event_time * 1000));
       }
-      setTimes(times);
-      console.log(times)
+      let today = new Date().setHours(0, 0, 0, 0);
+      let tempDayData = [];
+      let sortedTimelineData = [];
+      let prevDuration = 65536;
+      for (let idx in times) {
+        let duration = Math.floor((times[idx].valueOf() - today.valueOf()) / (24 * 60 * 60 * 1000));
+        console.log(duration, prevDuration);
+        if (duration > -2 && duration <= 5) {
+          tempDayData.push(timelineResponse.data.data[idx]);
+          if (duration < prevDuration) {
+            prevDuration = duration;
+            sortedTimelineData.push(tempDayData);
+            console.log(1);
+            tempDayData = [];
+          }
+        }
+      }
+      setSortedEvents(sortedTimelineData);
       // DO SOMETHING
       // setLoaded(true);
     }
@@ -260,7 +276,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
         bgcolor: 'background.paper',
       }}
     >
-      {timelineData!.data.data.map((item, idx) => {
+      {sortedEvents!.map((item, idx) => {
         const card = JSON.parse(item.raw.card);
         const desc = item.raw.desc;
         const dtype = item.dynamic_type;
