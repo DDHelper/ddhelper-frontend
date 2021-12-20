@@ -124,99 +124,8 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
         const group = props.data.find((i) => i.gid === item.gid)!;
         return (
           <div>
-            <TimelineTree gid={group.gid} />
             <TabPanel value={value} index={idx}>
-              <Timeline position="alternate">
-                <TimelineItem>
-                  <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    align="right"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    9:30 am
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot>
-                      <FastfoodIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                      抽奖
-                    </Typography>
-                    <Typography>去转发抽奖</Typography>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                  <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    10:00 am
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot color="primary">
-                      <LaptopMacIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                      直播
-                    </Typography>
-                    <Typography>去看直播</Typography>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                  <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    5:00 pm
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot color="primary" variant="outlined">
-                      <HotelIcon />
-                    </TimelineDot>
-                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                      新视频更新
-                    </Typography>
-                    <Typography>去看新视频</Typography>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                  <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    9:00 pm
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                    <TimelineDot color="secondary">
-                      <RepeatIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                      直播
-                    </Typography>
-                    <Typography>去看新的直播</Typography>
-                  </TimelineContent>
-                </TimelineItem>
-              </Timeline>
+              <TimelineTree gid={group.gid} />
             </TabPanel>
           </div>
         );
@@ -230,16 +139,16 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [pageOffset, setPageOffset] = useState<number>(0);
   const [timelineData, setTimelineData] = useState<TimelineApiReturn>();
-  const [sortedEvents, setSortedEvents] = useState<Array<any>>();
+  const [sortedTimelineData, setSortedTimelineData] = useState<Array<Array<any>>>();
 
   useEffect(() => {
     async function fetch() {
       const timelineResponse = await getTimeline({
         gid: props.gid,
         offset: pageOffset,
-        size: 100,
+        size: 32,
       });
-      console.log(timelineResponse);
+      // console.log(timelineResponse);
       let times = [];
       for (let idx in timelineResponse!.data.data) {
         // times.push(timestampToDate(timelineResponse!.data.data[idx].event_time));
@@ -251,66 +160,44 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
       let prevDuration = 65536;
       for (let idx in times) {
         let duration = Math.floor((times[idx].valueOf() - today.valueOf()) / (24 * 60 * 60 * 1000));
-        console.log(duration, prevDuration);
+        // console.log(duration, prevDuration);
         if (duration > -2 && duration <= 5) {
           tempDayData.push(timelineResponse.data.data[idx]);
           if (duration < prevDuration) {
             prevDuration = duration;
             sortedTimelineData.push(tempDayData);
-            console.log(1);
             tempDayData = [];
           }
         }
       }
-      setSortedEvents(sortedTimelineData);
+      // console.log(sortedTimelineData);
+      setSortedTimelineData(sortedTimelineData);
       // DO SOMETHING
-      // setLoaded(true);
+      setLoaded(true);
     }
     fetch();
   }, [getTimeline, props.gid]);
 
   return loaded ? (
-    <List
-      sx={{
-        width: '100%',
-        bgcolor: 'background.paper',
-      }}
-    >
-      {sortedEvents!.map((item, idx) => {
-        const card = JSON.parse(item.raw.card);
-        const desc = item.raw.desc;
-        const dtype = item.dynamic_type;
-        console.log(card);
-        // console.log(dtype);
-        switch (dtype) {
-          case 1:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType1 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-
-          case 2:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType2 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-          case 4:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType4 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-          case 8:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType8 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-        }
+    <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+      {sortedTimelineData!.map((item, idx) => {
+        return (
+          <Timeline position="alternate">
+            {item.map((item, idx) => {
+              return (
+                <SingleEventItem
+                  dynamic_id={item.dynamic_id}
+                  event_time={item.event_time}
+                  raw={item.raw}
+                  text={item.text}
+                  type={item.type}
+                />
+              );
+            })}
+          </Timeline>
+        );
       })}
-    </List>
+    </Box>
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>
       no data
@@ -318,45 +205,37 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   );
 };
 
-const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => {
-  // repost
-  let uname = props.card.user.uname;
-  let uid = props.card.user.uid;
-  let face = props.card.user.face;
-  let time = props.time;
-  let item = props.card.item;
-  let card_origin = JSON.parse(props.card.origin);
-  let origin_dtype = props.card.item.orig_type;
-
+const SingleEventItem: React.FC<{
+  dynamic_id: number;
+  event_time: number;
+  raw: any;
+  text: string;
+  type: string;
+}> = (props) => {
   return (
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar
-            variant="circular"
-            src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-          />
-        }
-        title={uname}
-        subheader={time}
-        action={<Chip label="转发" variant="outlined" />}
-      />
-      {origin_dtype === 2 && (
-        <Box sx={{ margin: 2 }}>
-          <ItemType2 card={card_origin} />
-        </Box>
-      )}
-      {origin_dtype === 4 && (
-        <Box sx={{ margin: 2 }}>
-          <ItemType4 card={card_origin} />
-        </Box>
-      )}
-      {origin_dtype === 8 && (
-        <Box sx={{ margin: 2 }}>
-          <ItemType8 card={card_origin} />
-        </Box>
-      )}
-    </Card>
+    <TimelineItem>
+      <TimelineOppositeContent
+        sx={{ m: 'auto 0' }}
+        align="right"
+        variant="body2"
+        color="text.secondary"
+      >
+        9:30 am
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineConnector />
+        <TimelineDot>
+          <FastfoodIcon />
+        </TimelineDot>
+        <TimelineConnector />
+      </TimelineSeparator>
+      <TimelineContent sx={{ py: '12px', px: 2 }}>
+        <Typography variant="h6" component="span">
+          抽奖
+        </Typography>
+        <Typography>去转发抽奖</Typography>
+      </TimelineContent>
+    </TimelineItem>
   );
 };
 
