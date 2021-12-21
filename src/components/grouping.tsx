@@ -171,7 +171,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
         const rows = props.details.find((i) => i.gid === item.gid)!.data;
         return (
           <TabPanel value={value} index={idx + 1}>
-            <EnhancedTable rows={rows} />
+            <EnhancedTable rows={rows} gid={item.gid}/>
             {idx + 1 !== 1 && <Button onClick={handleDelGroup}>删除分组</Button>}
           </TabPanel>
         );

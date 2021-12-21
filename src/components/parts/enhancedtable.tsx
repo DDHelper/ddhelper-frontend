@@ -15,26 +15,22 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Avatar from '@mui/material/Avatar';
-import { Link } from '@mui/material';
+import { Dialog, Link, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+
+import { useApi } from '../../utils/apiClient';
+import { serialize } from 'object-to-formdata';
+import { GroupListApiReturn, DoSubscribeValues } from '../../utils/apiModels';
+import { useEffect, useState } from 'react';
 
 interface Data {
   mid: number;
   name: string;
   face: string;
-}
-
-function createData(mid: number, name: string, face: string): Data {
-  return {
-    mid,
-    name,
-    face,
-  };
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -100,6 +96,57 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
+export interface SimpleDialogProps {
+  open: boolean;
+  selected: number[];
+  current_gid: number;
+  remove: 0 | 1;
+  groupList: GroupListApiReturn;
+  onClose: (value?: any) => void;
+  onConfirm: (value: any) => void;
+}
+
+function SimpleDialog(props: SimpleDialogProps) {
+  const { onClose, onConfirm, selected, current_gid, remove, groupList, open } = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const handleListItemClick = (value: any) => {
+    console.log(value);
+    onConfirm(value);
+  };
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      {/* <DialogTitle>Set backup account</DialogTitle> */}
+      <List sx={{ pt: 0 }}>
+        {groupList.data.map((item, idx) => (
+          <ListItem
+            button
+            onClick={() =>
+              handleListItemClick({
+                mid: selected,
+                old_group: current_gid,
+                new_group: item.gid,
+                remove_old: remove,
+              })
+            }
+            key={idx}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <PeopleOutlineIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={item.group_name} />
+          </ListItem>
+        ))}
+      </List>
+    </Dialog>
+  );
+}
+
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
@@ -156,11 +203,54 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 interface EnhancedTableToolbarProps {
-  numSelected: number;
+  selected: number[];
+  current_gid: number;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected } = props;
+  const { selected, current_gid } = props;
+  const numSelected = selected.length;
+  const { getGroupList, postMoveMember } = useApi();
+  const [open, setOpen] = useState(false);
+  const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
+
+  useEffect(() => {
+    async function fetch() {
+      const ListResponse = await getGroupList();
+      setGroupListData(ListResponse);
+      console.log(ListResponse);
+    }
+    fetch();
+  }, [getGroupList]);
+
+  const handleMoveOpen = async () => {
+    const ListResponse = await getGroupList();
+    setGroupListData(ListResponse);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDoMove = async (value: any) => {
+    let formData = new FormData();
+    Object.keys(value).forEach((key) => {
+      if (key === 'mid') {
+        const groups = value[key];
+        for (let i = 0; i < groups.length; i++) {
+          formData.append(key, groups[i].toString());
+        }
+      } else {
+        formData.append(key, value[key].toString());
+      }
+    });
+    const response = await postMoveMember(formData);
+    // console.log(response);
+    alert('移动成功');
+    window.location.reload();
+    setOpen(false);
+  };
 
   return (
     <Toolbar
@@ -190,12 +280,26 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             padding: 0,
           }}
         >
-          <Tooltip title="删除">
+          <SimpleDialog
+            selected={selected}
+            current_gid={current_gid}
+            groupList={groupListData!}
+            remove={1}
+            open={open}
+            onClose={handleClose}
+            onConfirm={handleDoMove}
+          />
+          <Tooltip title="移动">
+            <IconButton onClick={handleMoveOpen}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="复制">
             <IconButton>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="移动">
+          <Tooltip title="删除">
             <IconButton>
               <DeleteIcon />
             </IconButton>
@@ -212,10 +316,10 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   );
 };
 
-const EnhancedTable = (props: { rows: Data[] }) => {
+const EnhancedTable = (props: { rows: Data[]; gid: number }) => {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('mid');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [selected, setSelected] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -236,12 +340,12 @@ const EnhancedTable = (props: { rows: Data[] }) => {
   };
   */
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: number[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -252,7 +356,6 @@ const EnhancedTable = (props: { rows: Data[] }) => {
         selected.slice(selectedIndex + 1)
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -260,12 +363,7 @@ const EnhancedTable = (props: { rows: Data[] }) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - props.rows.length) : 0;
@@ -273,7 +371,7 @@ const EnhancedTable = (props: { rows: Data[] }) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar selected={selected} current_gid={props.gid} />
         <TableContainer>
           <Table aria-labelledby="tableTitle" size="medium">
             {/*<EnhancedTableHead
@@ -290,13 +388,13 @@ const EnhancedTable = (props: { rows: Data[] }) => {
               {stableSort(props.rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.mid);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.mid)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
