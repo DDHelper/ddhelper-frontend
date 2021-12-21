@@ -59,6 +59,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const PageHeader: React.FC<{}> = () => {
+  //页面上方快捷访问栏
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -175,6 +176,9 @@ const PageHeader: React.FC<{}> = () => {
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
+        {
+          //用户信息页面图标
+        }
       </MenuItem>
     </Menu>
   );
@@ -191,17 +195,29 @@ const PageHeader: React.FC<{}> = () => {
           >
             DD Helper
           </Typography>
+          {
+            //logo
+          }
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <MailIcon />
+              {
+                //邮件图标
+              }
             </IconButton>
             <Button href="/auth/login" variant="contained" disableElevation>
               登录
             </Button>
+            {
+              //登陆按钮
+            }
             <Button href="/auth/register" variant="contained" disableElevation>
               注册
             </Button>
+            {
+              //注册按钮
+            }
             <IconButton
               size="large"
               edge="end"
