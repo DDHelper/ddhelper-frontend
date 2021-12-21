@@ -126,6 +126,12 @@ export interface DelGroupApiReturn {
   msg: string;
 }
 
+// post MoveMember
+export interface MoveMemberApiReturn {
+  code: number;
+  msg: string;
+}
+
 // get Dynamic
 export interface DynamicQueryModel {
   gid: number;
@@ -168,7 +174,3 @@ export interface TimelineApiReturn {
   }
 }
 
-
-export interface UserMetadatumModel {
-  id: number;
-}

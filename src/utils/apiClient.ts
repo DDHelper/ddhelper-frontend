@@ -7,6 +7,7 @@ import {
   GroupListApiReturn,
   GroupMemberApiReturn,
   GroupMemberQueryModel,
+  MoveMemberApiReturn,
   SearchQueryModel,
   TimelineApiReturn,
   TimelineQueryModel,
@@ -145,6 +146,11 @@ export function useApi(token?: string) {
     deleteDelGroup: useCallback(
       async (values: string): Promise<DelGroupApiReturn> =>
         (await axios.delete<DelGroupApiReturn>('/subscribe/group/delete/', { data: values })).data,
+      [axios]
+    ),
+    postMoveMember: useCallback(
+      async (values: FormData): Promise<MoveMemberApiReturn> =>
+        (await axios.post<MoveMemberApiReturn>('/subscribe/member/move/', values)).data,
       [axios]
     ),
     getDynamic: useCallback(
