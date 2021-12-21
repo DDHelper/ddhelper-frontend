@@ -12,6 +12,7 @@ import { RegisterValues, PinValues } from '../utils/apiModels';
 const theme = createTheme();
 
 const RegisterFormWithHook: React.FC<{}> = () => {
+  //注册页面
   const {
     handleSubmit,
     register,
@@ -25,6 +26,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
     const email = e.target.value;
     if (email !== undefined && email !== '') setEmailEmpty(false);
     else setEmailEmpty(true);
+    //检查邮箱是否为空
   };
 
   const onSubmit = async (data: RegisterValues) => {
@@ -56,6 +58,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           id="username"
           label="用户名"
           autoComplete="username"
+          //输入自动补全
           autoFocus
           {...register('username', { required: true })}
         />

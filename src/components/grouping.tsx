@@ -65,6 +65,7 @@ function a11yProps(index: number) {
 // const FC
 
 interface GroupingData {
+  //分组信息
   data: Array<{
     gid: number;
     group_name: string;
@@ -105,6 +106,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
   };
 
   const handleAddGroup = async () => {
+    //新增分组
     let value = { group_name: newGroupRef.current!.value };
     const formData = serialize(value);
     handleClose();
@@ -115,6 +117,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
   };
 
   const handleDelGroup = async () => {
+    //删除该分组
     let delvalue = `gid=${props.data[value - 1].gid}`;
     // delvalue = Object.assign(delvalue, {})
     const response = await deleteDelGroup(delvalue);
@@ -156,6 +159,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
       <Tabs
         orientation="vertical"
         variant="scrollable"
+        //鼠标滚动下拉
         value={value}
         onChange={handleChange}
         sx={{ borderRight: 1, borderColor: 'divider' }}
@@ -181,6 +185,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
 };
 
 const GroupingPageView: React.FC<{}> = () => {
+  //分组管理页面
   /*
     groups.map({<Tab>
     {items.map({<box />})}
