@@ -19,10 +19,10 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RepeatIcon from '@mui/icons-material/Repeat';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import TvOutlinedIcon from '@mui/icons-material/TvOutlined';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Controller, useForm } from 'react-hook-form';
@@ -40,6 +40,8 @@ import Avatar from '@mui/material/Avatar';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -60,10 +62,14 @@ function timestampToDate(timestamp: number) {
   let Y = date.getFullYear();
   let M = date.getMonth() + 1 < 10 ? Number('0' + (date.getMonth() + 1)) : date.getMonth() + 1;
   let D = date.getDate() < 10 ? Number('0' + date.getDate()) : date.getDate();
+  let Mstr = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+  let Ystr = date.getFullYear() + '-';
+  let Dstr = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
   return {
     year: Y,
     month: M,
     day: D,
+    date: Ystr + Mstr + Dstr,
   };
 }
 
@@ -134,6 +140,14 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
   );
 };
 
+interface TimelineEvent {
+  dynamic_id: number;
+  event_time: number;
+  raw: any;
+  text: { extract: string };
+  type: string;
+}
+
 const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const { getTimeline } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -179,25 +193,77 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   }, [getTimeline, props.gid]);
 
   return loaded ? (
-    <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+    <Stack
+      direction="row-reverse"
+      justifyContent="center"
+      alignItems="baseline"
+      spacing={0}
+      sx={{ display: 'flex', overflowX: 'auto' }}
+    >
       {sortedTimelineData!.map((item, idx) => {
         return (
-          <Timeline position="alternate">
-            {item.map((item, idx) => {
-              return (
-                <SingleEventItem
-                  dynamic_id={item.dynamic_id}
-                  event_time={item.event_time}
-                  raw={item.raw}
-                  text={item.text}
-                  type={item.type}
-                />
-              );
-            })}
-          </Timeline>
+          <Stack direction="column" spacing={2}>
+            <Chip label={timestampToDate(item[0].event_time).date} sx={{ mx: 2 }} />
+            <Timeline position="alternate" sx={{ maxWidth: 300 }}>
+              {item.map((item, idx) => {
+                switch (item.type) {
+                  case 'LO':
+                    return (
+                      <ItemLO
+                        dynamic_id={item.dynamic_id}
+                        event_time={item.event_time}
+                        raw={item.raw}
+                        text={item.text}
+                        type={item.type}
+                      />
+                    );
+
+                  case 'RE':
+                    return (
+                      <ItemRE
+                        dynamic_id={item.dynamic_id}
+                        event_time={item.event_time}
+                        raw={item.raw}
+                        text={item.text}
+                        type={item.type}
+                      />
+                    );
+                  case 'ST':
+                    return (
+                      <ItemST
+                        dynamic_id={item.dynamic_id}
+                        event_time={item.event_time}
+                        raw={item.raw}
+                        text={item.text}
+                        type={item.type}
+                      />
+                    );
+                  case 'UN':
+                    return (
+                      <ItemUN
+                        dynamic_id={item.dynamic_id}
+                        event_time={item.event_time}
+                        raw={item.raw}
+                        text={item.text}
+                        type={item.type}
+                      />
+                    );
+                }
+                return (
+                  <ItemST
+                    dynamic_id={item.dynamic_id}
+                    event_time={item.event_time}
+                    raw={item.raw}
+                    text={item.text}
+                    type={item.type}
+                  />
+                );
+              })}
+            </Timeline>
+          </Stack>
         );
       })}
-    </Box>
+    </Stack>
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>
       no data
@@ -205,165 +271,137 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   );
 };
 
-const SingleEventItem: React.FC<{
-  dynamic_id: number;
-  event_time: number;
-  raw: any;
-  text: string;
-  type: string;
-}> = (props) => {
+const ItemRE: React.FC<TimelineEvent> = (props) => {
+  // post content
   return (
     <TimelineItem>
       <TimelineOppositeContent
         sx={{ m: 'auto 0' }}
         align="right"
         variant="body2"
-        color="text.secondary"
+        color="inherit"
       >
-        9:30 am
+        <Typography variant="h6" component="span">
+          视频
+        </Typography>
+        <Divider />
+        <Typography variant="subtitle2" component="span">
+          {timestampToTime(props.event_time).slice(-8)}
+        </Typography>
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <TimelineDot>
-          <FastfoodIcon />
-        </TimelineDot>
+        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+          <TimelineDot>
+            <PlayCircleOutlineOutlinedIcon />
+          </TimelineDot>
+        </Link>
         <TimelineConnector />
       </TimelineSeparator>
-      <TimelineContent sx={{ py: '12px', px: 2 }}>
+      <TimelineContent>
+        <Typography variant="body2">{props.text.extract}</Typography>
+      </TimelineContent>
+    </TimelineItem>
+  );
+};
+const ItemST: React.FC<TimelineEvent> = (props) => {
+  // live stream
+  return (
+    <TimelineItem>
+      <TimelineOppositeContent
+        sx={{ m: 'auto 0' }}
+        align="right"
+        variant="body2"
+        color="inherit"
+      >
+        <Typography variant="h6" component="span">
+          直播
+        </Typography>
+        <Divider />
+        <Typography variant="subtitle2" component="span">
+          {timestampToTime(props.event_time).slice(-8)}
+        </Typography>
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineConnector />
+        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+          <TimelineDot>
+            <TvOutlinedIcon />
+          </TimelineDot>
+        </Link>
+        <TimelineConnector />
+      </TimelineSeparator>
+      <TimelineContent>
+        <Typography variant="body2">{props.text.extract}</Typography>
+      </TimelineContent>
+    </TimelineItem>
+  );
+};
+const ItemLO: React.FC<TimelineEvent> = (props) => {
+  // lottery
+  return (
+    <TimelineItem>
+      <TimelineOppositeContent
+        sx={{ m: 'auto 0' }}
+        align="right"
+        variant="body2"
+        color="inherit"
+      >
         <Typography variant="h6" component="span">
           抽奖
         </Typography>
-        <Typography>去转发抽奖</Typography>
+        <Divider />
+        <Typography variant="subtitle2" component="span">
+          {timestampToTime(props.event_time).slice(-8)}
+        </Typography>
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineConnector />
+        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+          <TimelineDot>
+            <EmojiEventsOutlinedIcon />
+          </TimelineDot>
+        </Link>
+        <TimelineConnector />
+      </TimelineSeparator>
+      <TimelineContent>
+        <Typography variant="body2">{props.text.extract}</Typography>
       </TimelineContent>
     </TimelineItem>
   );
 };
 
-const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
-  // pic and text
-  let uname = props.card.user.name;
-  let uid = props.card.user.uid;
-  let face = props.card.user.head_url;
-  let time = timestampToTime(props.card.item.upload_time);
-  let item = props.card.item;
-  let content = props.card.item.description;
-  let pics = props.card.item.pictures;
+const ItemUN: React.FC<TimelineEvent> = (props) => {
+  // other
   return (
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar
-            variant="circular"
-            src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-          />
-        }
-        title={uname}
-        subheader={time}
-        action={<Chip label="图文" variant="outlined" />}
-      />
-      <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="body2" color="text.secondary">
-          {content}
+    <TimelineItem>
+      <TimelineOppositeContent
+        sx={{ m: 'auto 0' }}
+        align="right"
+        variant="body2"
+        color="inherit"
+      >
+        <Typography variant="h6" component="span">
+          其他
         </Typography>
-        {pics.map((item: any) => {
-          return (
-            <CardMedia
-              component="img"
-              image={`http://ddd.edrows.top/txcos/pic/?url=${item.img_src}@360w.webp`}
-              sx={{ my: 2 }}
-            />
-          );
-        })}
-      </CardContent>
-    </Card>
-  );
-};
-
-const ItemType4: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
-  // pure text
-  let uname = props.card.user.uname;
-  let uid = props.card.user.mid;
-  let face = props.card.user.face;
-  let time = timestampToTime(props.card.item.timestamp);
-  let content = props.card.item.content;
-  let origin = props.card.origin;
-  return (
-    <Card sx={{ display: 'flex', flexDirection: 'column' }}>
-      <CardHeader
-        avatar={
-          <Avatar
-            variant="circular"
-            src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-          />
-        }
-        title={uname}
-        subheader={time}
-        action={<Chip label="文字" variant="outlined" />}
-      />
-
-      <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="subtitle2" sx={{ ml: 2, maxWidth: 360 }}>
-            {content}
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
-  );
-};
-
-const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
-  // video
-  let uname = props.card.owner.name;
-  let uid = props.card.owner.mid;
-  let face = props.card.owner.face;
-  let time = timestampToTime(props.card.ctime);
-  let title = props.card.title;
-  let desc = props.card.desc;
-  return (
-    <Card sx={{ display: 'flex', flexDirection: 'column' }}>
-      <CardHeader
-        avatar={
-          <Avatar
-            variant="circular"
-            src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
-          />
-        }
-        title={uname}
-        subheader={time}
-        action={<Chip label="视频" variant="outlined" />}
-      />
-
-      <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
-        <Link
-          variant="h6"
-          href={props.card.short_link_v2}
-          color="inherit"
-          underline="hover"
-          sx={{ ml: 2 }}
-        >
-          <CardMedia
-            sx={{ display: 'flex', flexDirection: 'row' }}
-            component="img"
-            image={`http://ddd.edrows.top/txcos/pic/?url=${props.card.pic}@360w.webp`}
-          />
+        <Divider />
+        <Typography variant="subtitle2" component="span">
+          【预期当日消息】
+        </Typography>
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineConnector />
+        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+          <TimelineDot>
+            <TextSnippetOutlinedIcon />
+          </TimelineDot>
         </Link>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Link
-            variant="h6"
-            href={props.card.short_link_v2}
-            color="inherit"
-            underline="hover"
-            sx={{ ml: 2, maxWidth: 360 }}
-          >
-            {title}
-          </Link>
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
-            {desc}
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
+        <TimelineConnector />
+      </TimelineSeparator>
+      <TimelineContent>
+        <Typography variant="body2">{props.text.extract}</Typography>
+      </TimelineContent>
+    </TimelineItem>
   );
 };
 
