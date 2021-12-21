@@ -24,6 +24,7 @@ import { useHistory } from 'react-router';
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
+  //登录页面
   const { handleSubmit, register, control } = useForm();
   const { postLogin } = useApi();
   const history = useHistory();
@@ -47,6 +48,8 @@ const LoginFormWithHook: React.FC<{}> = () => {
   return (
     <Box component="form" sx={{ mt: 1 }}>
       <TextField
+      {//输入用户名
+      }
         margin="normal"
         required
         fullWidth
@@ -57,6 +60,9 @@ const LoginFormWithHook: React.FC<{}> = () => {
         {...register('username', { required: true })}
       />
       <TextField
+      {
+        //输入密码
+      }
         margin="normal"
         required
         fullWidth
@@ -76,6 +82,8 @@ const LoginFormWithHook: React.FC<{}> = () => {
       >
         登录
       </Button>
+      {//点击登录
+      }
       <Grid container>
         <Grid item xs>
           <Link href="#" variant="body2" /* TODO: route to iforgot */>
@@ -83,6 +91,9 @@ const LoginFormWithHook: React.FC<{}> = () => {
           </Link>
         </Grid>
         <Grid item>
+          {
+            //尚未注册
+          }
           <Link href="/auth/register" variant="body2">
             注册
           </Link>
