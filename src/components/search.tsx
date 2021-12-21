@@ -65,6 +65,7 @@ export interface SimpleDialogProps {
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
+  //单击按钮弹出对话框
   const { onClose, onConfirm, selectedMid, groupList, open } = props;
 
   const handleClose = () => {
@@ -94,12 +95,15 @@ function SimpleDialog(props: SimpleDialogProps) {
           </ListItem>
         ))}
         <ListItem autoFocus button onClick={() => handleListItemClick('addAccount')}>
+          
           <ListItemAvatar>
             <Avatar>
               <RemoveIcon />
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="Unfollow" />
+          {//点击取消关注
+          }
         </ListItem>
       </List>
     </Dialog>
@@ -172,6 +176,7 @@ const SearchPageView: React.FC<{}> = () => {
           <SearchIcon />
         </IconButton>
       </Box>
+      //搜索栏
     );
   }
 
@@ -220,6 +225,10 @@ const SearchPageView: React.FC<{}> = () => {
                               variant="rounded"
                               src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
                             />
+                            
+                            {//显示up主头像
+                            }
+                            
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemButton
@@ -252,6 +261,7 @@ const SearchPageView: React.FC<{}> = () => {
                         />
                         <ListItemText
                           primary={`粉丝数 ${item.fans}`}
+                          //显示粉丝数量
                           secondary={
                             <React.Fragment>
                               <Typography
@@ -263,6 +273,7 @@ const SearchPageView: React.FC<{}> = () => {
                                 uid {item.mid}
                               </Typography>
                             </React.Fragment>
+                            //显示个性签名
                           }
                           sx={{
                             position: 'absolute',
