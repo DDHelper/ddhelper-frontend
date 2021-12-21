@@ -42,6 +42,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Link from '@mui/material/Link';
 import { Chip, ImageList, ImageListItem } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroller';
 
 /*
 interface ExpandMoreProps extends IconButtonProps {
@@ -139,12 +140,20 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
     </Box>
   );
 };
+interface dynamicData {
+    dynamic_id: number;
+    mid: number;
+    dynamic_type: number;
+    timestamp: number;
+    raw: any;
+}
 
 const RolllistItem: React.FC<{ gid: number }> = (props) => {
   const { getDynamic } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [more, setMore] = useState<boolean>(true);
   const [pageOffset, setPageOffset] = useState<number>(0);
-  const [dynamicData, setDynamicData] = useState<DynamicApiReturn>();
+  const [dynamicListData, setDynamicListData] = useState<Array<dynamicData>>();
 
   useEffect(() => {
     async function fetch() {
@@ -153,7 +162,9 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
         offset: pageOffset,
         size: 10,
       });
-      setDynamicData(dynamicResponse);
+      setDynamicListData(dynamicResponse.data.data);
+      setPageOffset(pageOffset + 1);
+      setMore(dynamicResponse.data.has_more);
       // console.log(dynamicResponse);
       // DO SOMETHING
       setLoaded(true);
@@ -161,6 +172,16 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
     fetch();
   }, [getDynamic, props.gid]);
 
+  async function loadFunc() {
+    const dynamicResponse = await getDynamic({
+      gid: props.gid,
+      offset: pageOffset,
+      size: 10,
+    });
+    setDynamicListData(dynamicListData?.concat(dynamicResponse.data.data));
+    setPageOffset(pageOffset + 1);
+    setMore(dynamicResponse.data.has_more);
+  }
   return loaded ? (
     <List
       sx={{
@@ -168,40 +189,53 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
         bgcolor: 'background.paper',
       }}
     >
-      {dynamicData!.data.data.map((item, idx) => {
-        const card = JSON.parse(item.raw.card);
-        const desc = item.raw.desc;
-        const dtype = item.dynamic_type;
-        console.log(card);
-        // console.log(dtype);
-        switch (dtype) {
-          case 1:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType1 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-
-          case 2:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType2 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-          case 4:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType4 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
-          case 8:
-            return (
-              <ListItem alignItems="flex-start">
-                <ItemType8 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
-              </ListItem>
-            );
+      <InfiniteScroll
+        initialLoad={false}
+        pageStart={pageOffset}
+        loadMore={loadFunc}
+        hasMore={more}
+        useWindow={true}
+        loader={
+          <div className="loader" key={0}>
+            Loading ...
+          </div>
         }
-      })}
+      >
+        {dynamicListData!.map((item, idx) => {
+          const card = JSON.parse(item.raw.card);
+          const desc = item.raw.desc;
+          const dtype = item.dynamic_type;
+          console.log(card);
+          // console.log(dtype);
+          switch (dtype) {
+            case 1:
+              return (
+                <ListItem alignItems="flex-start">
+                  <ItemType1 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+                </ListItem>
+              );
+
+            case 2:
+              return (
+                <ListItem alignItems="flex-start">
+                  <ItemType2 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+                </ListItem>
+              );
+            case 4:
+              return (
+                <ListItem alignItems="flex-start">
+                  <ItemType4 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+                </ListItem>
+              );
+            case 8:
+              return (
+                <ListItem alignItems="flex-start">
+                  <ItemType8 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+                </ListItem>
+              );
+          }
+        })}
+      </InfiniteScroll>
     </List>
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>
