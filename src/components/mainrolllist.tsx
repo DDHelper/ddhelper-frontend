@@ -41,7 +41,7 @@ import { DynamicApiReturn, GroupListApiReturn } from '../utils/apiModels';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Link from '@mui/material/Link';
-import { Chip } from '@mui/material';
+import { Chip, ImageList, ImageListItem } from '@mui/material';
 
 /*
 interface ExpandMoreProps extends IconButtonProps {
@@ -125,7 +125,7 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
         {props.data.map((item, idx) => {
-          return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} />;
+          return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} wrapped />;
         })}
       </Tabs>
       {props.data.map((item, idx) => {
@@ -221,7 +221,7 @@ const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => 
   let origin_dtype = props.card.item.orig_type;
 
   return (
-    <Card>
+    <Card sx={{ maxWidth: 1000 }}>
       <CardHeader
         avatar={
           <Avatar
@@ -262,7 +262,7 @@ const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
   let content = props.card.item.description;
   let pics = props.card.item.pictures;
   return (
-    <Card>
+    <Card sx={{ maxWidth: 1000 }}>
       <CardHeader
         avatar={
           <Avatar
@@ -274,19 +274,24 @@ const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
         subheader={time}
         action={<Chip label="图文" variant="outlined" />}
       />
-      <CardContent sx={{display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant="body2" color="text.secondary">
           {content}
         </Typography>
-          {pics.map((item: any) => {
-            return (
-              <CardMedia
-                component="img"
-                image={`http://ddd.edrows.top/txcos/pic/?url=${item.img_src}@360w.webp`}
-                sx= {{my: 2}}
-              />
-            );
-          })}
+        <Box sx={{ maxWidth: 1000 }}>
+          <ImageList variant="masonry" cols={3} gap={8}>
+            {pics.map((item: any) => (
+              <ImageListItem key={item.img}>
+                <img
+                  src={`http://ddd.edrows.top/txcos/pic/?url=${item.img_src}@360w.webp`}
+                  // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                  // alt={item.title}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -301,7 +306,7 @@ const ItemType4: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
   let content = props.card.item.content;
   let origin = props.card.origin;
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ display: 'flex', flexDirection: 'column', maxWidth: 1000 }}>
       <CardHeader
         avatar={
           <Avatar
@@ -334,7 +339,7 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
   let title = props.card.title;
   let desc = props.card.desc;
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ display: 'flex', flexDirection: 'column', maxWidth: 1000 }}>
       <CardHeader
         avatar={
           <Avatar
@@ -371,7 +376,9 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
           >
             {title}
           </Link>
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>{desc}</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+            {desc}
+          </Typography>
         </Box>
       </CardContent>
     </Card>
