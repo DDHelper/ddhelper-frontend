@@ -30,6 +30,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
   };
 
   const onSubmit = async (data: RegisterValues) => {
+    //密码和验证码都用md5码进行加密
     let value = Object.assign(data, {});
     value.password = Md5.hashStr(value.password);
     value.confirmPassword = Md5.hashStr(value.confirmPassword);
@@ -40,6 +41,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
   };
 
   const onSendEmail = async () => {
+    //发送验证码
     let value = { email: await getValues('email') };
     console.log(getValues('email'));
     const formData = serialize(value);
