@@ -108,6 +108,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
   const handleAddGroup = async () => {
     //新增分组
     let value = { group_name: newGroupRef.current!.value };
+    //对新的分组进行命名
     const formData = serialize(value);
     handleClose();
     const response = await postAddGroup(formData);
