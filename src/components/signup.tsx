@@ -115,6 +115,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         </Button>
       </Box>
       <Button
+      //点击发送验证码
         fullWidth
         variant="outlined"
         sx={{ mt: 3, mb: 2 }}
