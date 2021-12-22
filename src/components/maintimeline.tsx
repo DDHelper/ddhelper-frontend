@@ -138,7 +138,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [pageOffset, setPageOffset] = useState<number>(0);
   const [timelineData, setTimelineData] = useState<TimelineApiReturn>();
-  const [sortedTimelineData, setSortedTimelineData] = useState<Array<Array<any>>>();
+  const [sortedTimelineData, setSortedTimelineData] = useState<Array<Array<any>>>([]);
   const [dates, setDates] = useState<any[]>();
 
   useEffect(() => {
@@ -162,6 +162,10 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
           trimedTimelineData.push(timelineResponse.data.data[idx]);
         }
       }
+      if (trimedTimelineData.length === 0) {
+        setLoaded(true);
+        return;
+      }
       let prevDuration =
         Math.floor(
           (new Date(trimedTimelineData[0].event_time * 1000).valueOf() - today.valueOf()) /
@@ -172,7 +176,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
           (new Date(trimedTimelineData[idx].event_time * 1000).valueOf() - today.valueOf()) /
             (24 * 60 * 60 * 1000)
         );
-        if (duration - prevDuration == -1) {
+        if (duration - prevDuration === -1) {
           tempDayData.push(trimedTimelineData[idx]);
         } else {
           prevDuration = duration + 1;
@@ -263,7 +267,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
     </Stack>
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>
-      no data
+      Loading ...
     </Typography>
   );
 };
