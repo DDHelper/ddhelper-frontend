@@ -36,6 +36,7 @@ const LoginFormWithHook: React.FC<{}> = () => {
     const response = await postLogin(formData);
     console.log(response.code !== 200);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    //若密码正确则显示'登录成功'，且直接进入主信息页面(也就是动态展示页面)
     else {
       alert('登录成功');
       history.push({
