@@ -10,6 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
@@ -25,7 +26,9 @@ import Typography from '@mui/material/Typography';
 
 import { useApi } from '../utils/apiClient';
 import {
-    DoSubscribeValues, GroupListApiReturn, SearchSubscribeApiReturn
+  DoSubscribeValues,
+  GroupListApiReturn,
+  SearchSubscribeApiReturn,
 } from '../utils/apiModels';
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
@@ -54,7 +57,7 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
   return (
     <Dialog onClose={handleClose} open={open}>
-      {/* <DialogTitle>Set backup account</DialogTitle> */}
+      <DialogTitle>加入分组</DialogTitle>
       <List sx={{ pt: 0 }}>
         {groupList.data.map((item, idx) => (
           <ListItem
@@ -173,83 +176,91 @@ const SearchPageView: React.FC<{}> = () => {
               </Box>
 
               {loaded ? (
-                <List
+                <Box
                   sx={{
-                    width: '100%',
-                    maxWidth: 2000,
-                    boxShadow: 2,
-                    bgcolor: 'background.paper',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    padding: 0,
                   }}
                 >
-                  {searchData!.data.map((item, idx) => {
-                    return (
-                      <ListItem>
-                        <SimpleDialog
-                          selectedMid={selectedIndex}
-                          groupList={groupListData!}
-                          open={open}
-                          onClose={handleClose}
-                          onConfirm={handleDoSubscribe}
-                        />
-                        <ListItemAvatar>
-                          <Avatar>
-                            <Avatar
-                              variant="rounded"
-                              src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
-                            />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemButton
-                          sx={{ mx: 1, my: 1, p: 2, position: 'absolute', left: '90%' }}
-                          onClick={(event) => handleClickOpen(event, item.mid)}
-                        >
-                          <AddIcon />
-                        </ListItemButton>
-                        <ListItemText
-                          primary={
-                            <Link
-                              variant="subtitle2"
-                              underline="hover"
-                              color="inherit"
-                              href={`https://space.bilibili.com/${item.mid}`}
-                            >
-                              {item.uname}
-                            </Link>
-                          }
-                          secondary={
-                            <React.Fragment>
-                              <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                              ></Typography>
-                            </React.Fragment>
-                          }
-                        />
-                        <ListItemText
-                          primary={`粉丝数 ${item.fans}`}
-                          secondary={
-                            <React.Fragment>
-                              <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
+                  <SimpleDialog
+                    selectedMid={selectedIndex}
+                    groupList={groupListData!}
+                    open={open}
+                    onClose={handleClose}
+                    onConfirm={handleDoSubscribe}
+                  />
+                  <List
+                    sx={{
+                      width: '100%',
+                      maxWidth: 2000,
+                      boxShadow: 2,
+                      bgcolor: 'background.paper',
+                    }}
+                  >
+                    {searchData!.data.map((item, idx) => {
+                      return (
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar>
+                              <Avatar
+                                variant="rounded"
+                                src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
+                              />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemButton
+                            sx={{ mx: 1, my: 1, p: 2, position: 'absolute', left: '90%' }}
+                            onClick={(event) => handleClickOpen(event, item.mid)}
+                          >
+                            <AddIcon />
+                          </ListItemButton>
+                          <ListItemText
+                            primary={
+                              <Link
+                                variant="subtitle2"
+                                underline="hover"
+                                color="inherit"
+                                href={`https://space.bilibili.com/${item.mid}`}
                               >
-                                uid {item.mid}
-                              </Typography>
-                            </React.Fragment>
-                          }
-                          sx={{
-                            position: 'absolute',
-                            left: '50%',
-                          }}
-                        />
-                      </ListItem>
-                    );
-                  })}
-                </List>
+                                {item.uname}
+                              </Link>
+                            }
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  sx={{ display: 'inline' }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                ></Typography>
+                              </React.Fragment>
+                            }
+                          />
+                          <ListItemText
+                            primary={`粉丝数 ${item.fans}`}
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  sx={{ display: 'inline' }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                >
+                                  uid {item.mid}
+                                </Typography>
+                              </React.Fragment>
+                            }
+                            sx={{
+                              position: 'absolute',
+                              left: '50%',
+                            }}
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Box>
               ) : (
                 <Typography variant="h6" sx={{ mx: 8 }}>
                   no data
