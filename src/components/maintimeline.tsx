@@ -120,7 +120,7 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{ borderRight: 1, borderColor: 'divider', minWidth: 100 }}
       >
         {props.data.map((item, idx) => {
           return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} />;
@@ -154,6 +154,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const [pageOffset, setPageOffset] = useState<number>(0);
   const [timelineData, setTimelineData] = useState<TimelineApiReturn>();
   const [sortedTimelineData, setSortedTimelineData] = useState<Array<Array<any>>>();
+  const [dates, setDates] = useState<any[]>();
 
   useEffect(() => {
     async function fetch() {
@@ -163,28 +164,39 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
         size: 32,
       });
       // console.log(timelineResponse);
-      let times = [];
-      for (let idx in timelineResponse!.data.data) {
-        // times.push(timestampToDate(timelineResponse!.data.data[idx].event_time));
-        times.push(new Date(timelineResponse!.data.data[idx].event_time * 1000));
-      }
       let today = new Date().setHours(0, 0, 0, 0);
+      let trimedTimelineData = [];
       let tempDayData = [];
       let sortedTimelineData = [];
-      let prevDuration = 65536;
-      for (let idx in times) {
-        let duration = Math.floor((times[idx].valueOf() - today.valueOf()) / (24 * 60 * 60 * 1000));
-        // console.log(duration, prevDuration);
+      for (let idx in timelineResponse.data.data) {
+        let duration = Math.floor(
+          (timelineResponse!.data.data[idx].event_time * 1000 - today.valueOf()) /
+            (24 * 60 * 60 * 1000)
+        );
         if (duration > -2 && duration <= 5) {
-          tempDayData.push(timelineResponse.data.data[idx]);
-          if (duration < prevDuration) {
-            prevDuration = duration;
-            sortedTimelineData.push(tempDayData);
-            tempDayData = [];
-          }
+          trimedTimelineData.push(timelineResponse.data.data[idx]);
         }
       }
-      // console.log(sortedTimelineData);
+      let prevDuration =
+        Math.floor(
+          (new Date(trimedTimelineData[0].event_time * 1000).valueOf() - today.valueOf()) /
+            (24 * 60 * 60 * 1000)
+        ) + 1;
+      for (let idx in trimedTimelineData) {
+        let duration = Math.floor(
+          (new Date(trimedTimelineData[idx].event_time * 1000).valueOf() - today.valueOf()) /
+            (24 * 60 * 60 * 1000)
+        );
+        if (duration - prevDuration == -1) {
+          tempDayData.push(trimedTimelineData[idx]);
+        } else {
+          prevDuration = duration + 1;
+          sortedTimelineData.push(tempDayData);
+          tempDayData = [];
+          tempDayData.push(trimedTimelineData[idx]);
+        }
+      }
+      sortedTimelineData.push(tempDayData);
       setSortedTimelineData(sortedTimelineData);
       // DO SOMETHING
       setLoaded(true);
@@ -195,16 +207,16 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   return loaded ? (
     <Stack
       direction="row-reverse"
-      justifyContent="center"
+      //justifyContent="center"
       alignItems="baseline"
       spacing={0}
       sx={{ display: 'flex', overflowX: 'auto' }}
     >
       {sortedTimelineData!.map((item, idx) => {
         return (
-          <Stack direction="column" spacing={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Chip label={timestampToDate(item[0].event_time).date} sx={{ mx: 2 }} />
-            <Timeline position="alternate" sx={{ maxWidth: 300 }}>
+            <Timeline sx={{ maxWidth: 400 }}>
               {item.map((item, idx) => {
                 switch (item.type) {
                   case 'LO':
@@ -260,7 +272,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
                 );
               })}
             </Timeline>
-          </Stack>
+          </Box>
         );
       })}
     </Stack>
@@ -275,13 +287,8 @@ const ItemRE: React.FC<TimelineEvent> = (props) => {
   // post content
   return (
     <TimelineItem>
-      <TimelineOppositeContent
-        sx={{ m: 'auto 0' }}
-        align="right"
-        variant="body2"
-        color="inherit"
-      >
-        <Typography variant="h6" component="span">
+      <TimelineOppositeContent sx={{ m: 'auto 0' }} align="right" variant="body2" color="inherit">
+        <Typography variant="h6" component="span" color="primary">
           视频
         </Typography>
         <Divider />
@@ -292,7 +299,7 @@ const ItemRE: React.FC<TimelineEvent> = (props) => {
       <TimelineSeparator>
         <TimelineConnector />
         <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
-          <TimelineDot>
+          <TimelineDot color="primary" variant="outlined">
             <PlayCircleOutlineOutlinedIcon />
           </TimelineDot>
         </Link>
@@ -308,13 +315,8 @@ const ItemST: React.FC<TimelineEvent> = (props) => {
   // live stream
   return (
     <TimelineItem>
-      <TimelineOppositeContent
-        sx={{ m: 'auto 0' }}
-        align="right"
-        variant="body2"
-        color="inherit"
-      >
-        <Typography variant="h6" component="span">
+      <TimelineOppositeContent sx={{ m: 'auto 0' }} align="right" variant="body2" color="inherit">
+        <Typography variant="h6" component="span" color="primary">
           直播
         </Typography>
         <Divider />
@@ -325,7 +327,7 @@ const ItemST: React.FC<TimelineEvent> = (props) => {
       <TimelineSeparator>
         <TimelineConnector />
         <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
-          <TimelineDot>
+          <TimelineDot color="primary" variant="outlined">
             <TvOutlinedIcon />
           </TimelineDot>
         </Link>
@@ -341,24 +343,19 @@ const ItemLO: React.FC<TimelineEvent> = (props) => {
   // lottery
   return (
     <TimelineItem>
-      <TimelineOppositeContent
-        sx={{ m: 'auto 0' }}
-        align="right"
-        variant="body2"
-        color="inherit"
-      >
-        <Typography variant="h6" component="span">
+      <TimelineOppositeContent sx={{ m: 'auto 0' }} align="right" variant="body2" color="inherit">
+        <Typography variant="h6" component="span" color="primary">
           抽奖
         </Typography>
         <Divider />
-        <Typography variant="subtitle2" component="span">
+        <Typography variant="subtitle2" component="span" color="primary">
           {timestampToTime(props.event_time).slice(-8)}
         </Typography>
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
         <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
-          <TimelineDot>
+          <TimelineDot color="primary" variant="outlined">
             <EmojiEventsOutlinedIcon />
           </TimelineDot>
         </Link>
@@ -375,13 +372,8 @@ const ItemUN: React.FC<TimelineEvent> = (props) => {
   // other
   return (
     <TimelineItem>
-      <TimelineOppositeContent
-        sx={{ m: 'auto 0' }}
-        align="right"
-        variant="body2"
-        color="inherit"
-      >
-        <Typography variant="h6" component="span">
+      <TimelineOppositeContent sx={{ m: 'auto 0' }} align="right" variant="body2" color="inherit">
+        <Typography variant="h6" component="span" color="primary">
           其他
         </Typography>
         <Divider />
@@ -392,7 +384,7 @@ const ItemUN: React.FC<TimelineEvent> = (props) => {
       <TimelineSeparator>
         <TimelineConnector />
         <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
-          <TimelineDot>
+          <TimelineDot color="primary" variant="outlined">
             <TextSnippetOutlinedIcon />
           </TimelineDot>
         </Link>
@@ -413,7 +405,7 @@ const MainTimelinePageView: React.FC<{}> = () => {
     async function fetch() {
       const ListResponse = await getGroupList();
       setGroupListData(ListResponse);
-      console.log(ListResponse);
+      // console.log(ListResponse);
       // DO SOMETHING
       setLoaded(true);
     }
