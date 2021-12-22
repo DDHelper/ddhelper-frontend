@@ -31,7 +31,7 @@ const LoginFormWithHook: React.FC<{}> = () => {
 
   const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
-    value.password = Md5.hashStr(value.password);
+    value.password = Md5.hashStr(value.password);  //用md5码对密码进行加密，防止被窃听
     const formData = serialize(value);
     const response = await postLogin(formData);
     console.log(response.code !== 200);
