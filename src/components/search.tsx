@@ -76,6 +76,7 @@ function SimpleDialog(props: SimpleDialogProps) {
     console.log(value);
     onConfirm(value);
   };
+  //对话框各个选项
   return (
     <Dialog onClose={handleClose} open={open}>
       {/* <DialogTitle>Set backup account</DialogTitle> */}
