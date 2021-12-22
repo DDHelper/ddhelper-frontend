@@ -1,28 +1,18 @@
-import React, { useState } from 'react';
-import { useApi } from '../../utils/apiClient';
-import {
-  Button,
-  Paper,
-  Box,
-  Grid,
-  CssBaseline,
-  Typography,
-  Link,
-  Avatar,
-  AppBar,
-  Toolbar,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import React from 'react';
+
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import TimelineIcon from '@mui/icons-material/Timeline';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import SearchOutlineIcon from '@mui/icons-material/SearchOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
 
 interface props {
   drawerWidth: number;

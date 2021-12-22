@@ -1,22 +1,21 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+import React from 'react';
 import { useHistory } from 'react-router';
+
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
+import MoreIcon from '@mui/icons-material/MoreVert';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AppBar from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { alpha, styled } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -149,14 +148,6 @@ const PageHeader: React.FC<{}> = () => {
         </Button>
       </MenuItem>
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
         <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
           <Badge badgeContent={17} color="error">
             <NotificationsIcon />
@@ -193,9 +184,6 @@ const PageHeader: React.FC<{}> = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <MailIcon />
-            </IconButton>
             <Button href="/auth/login" variant="contained" disableElevation>
               登录
             </Button>

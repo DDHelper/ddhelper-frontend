@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import './App.css';
-import { BrowserRouter, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { Grid, Paper } from '@mui/material';
+import { BrowserRouter, Route, Switch, } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import AuthView from './components/auth';
 import RegisterView from './components/signup';

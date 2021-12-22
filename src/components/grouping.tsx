@@ -1,30 +1,22 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { serialize } from 'object-to-formdata';
+import React, { useEffect, useRef, useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Modal from '@mui/material/Modal';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+
+import { useApi } from '../utils/apiClient';
+import { GroupListApiReturn, GroupMemberApiReturn } from '../utils/apiModels';
+import EnhancedTable from './parts/enhancedtable';
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { GroupListApiReturn, GroupMemberApiReturn } from '../utils/apiModels';
-import { useApi } from '../utils/apiClient';
-import { useEffect, useRef, useState } from 'react';
-import Card from '@mui/material/Card';
-import EnhancedTable from './parts/enhancedtable';
-import { Button, Modal, TextField } from '@mui/material';
-import { serialize } from 'object-to-formdata';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -171,7 +163,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
         const rows = props.details.find((i) => i.gid === item.gid)!.data;
         return (
           <TabPanel value={value} index={idx + 1}>
-            <EnhancedTable rows={rows} gid={item.gid}/>
+            <EnhancedTable rows={rows} gid={item.gid} />
             {idx + 1 !== 1 && <Button onClick={handleDelGroup}>删除分组</Button>}
           </TabPanel>
         );

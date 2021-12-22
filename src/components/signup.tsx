@@ -1,13 +1,20 @@
-import TextField from '@mui/material/TextField';
-import React, { SyntheticEvent, useState } from 'react';
-import { useApi } from '../utils/apiClient';
-import { Button, Box, CssBaseline, Typography, Avatar, Container } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useForm } from 'react-hook-form';
 import { serialize } from 'object-to-formdata';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Md5 } from 'ts-md5/dist/md5';
-import { RegisterValues, PinValues } from '../utils/apiModels';
+
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+
+import { useApi } from '../utils/apiClient';
+import { RegisterValues } from '../utils/apiModels';
 
 const theme = createTheme();
 
