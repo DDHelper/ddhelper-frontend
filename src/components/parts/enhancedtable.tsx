@@ -212,6 +212,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const numSelected = selected.length;
   const { getGroupList, postMoveMember } = useApi();
   const [open, setOpen] = useState(false);
+  const [remove, setRemove] = useState<0 | 1>(0);
   const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
 
   useEffect(() => {
@@ -226,6 +227,14 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const handleMoveOpen = async () => {
     const ListResponse = await getGroupList();
     setGroupListData(ListResponse);
+    setRemove(1);
+    setOpen(true);
+  };
+
+  const handleCopyOpen = async () => {
+    const ListResponse = await getGroupList();
+    setGroupListData(ListResponse);
+    setRemove(0);
     setOpen(true);
   };
 
@@ -247,7 +256,8 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     });
     const response = await postMoveMember(formData);
     // console.log(response);
-    alert('移动成功');
+    if (remove) alert('移动成功');
+    else alert('复制成功');
     window.location.reload();
     setOpen(false);
   };
@@ -284,7 +294,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             selected={selected}
             current_gid={current_gid}
             groupList={groupListData!}
-            remove={1}
+            remove={remove}
             open={open}
             onClose={handleClose}
             onConfirm={handleDoMove}
@@ -295,7 +305,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="复制">
-            <IconButton>
+            <IconButton onClick={handleCopyOpen}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
