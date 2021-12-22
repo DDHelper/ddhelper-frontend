@@ -152,18 +152,18 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
   const { getDynamic } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
-  const [pageOffset, setPageOffset] = useState<number>(0);
+  const [offset, setOffset] = useState<number>(0);
   const [dynamicListData, setDynamicListData] = useState<Array<dynamicData>>();
 
   useEffect(() => {
     async function fetch() {
       const dynamicResponse = await getDynamic({
         gid: props.gid,
-        offset: pageOffset,
+        offset: offset,
         size: 10,
       });
       setDynamicListData(dynamicResponse.data.data);
-      setPageOffset(pageOffset + 1);
+      setOffset(dynamicResponse.data.offset);
       setMore(dynamicResponse.data.has_more);
       // console.log(dynamicResponse);
       // DO SOMETHING
@@ -175,11 +175,11 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
   async function loadFunc() {
     const dynamicResponse = await getDynamic({
       gid: props.gid,
-      offset: pageOffset,
+      offset: offset,
       size: 10,
     });
     setDynamicListData(dynamicListData?.concat(dynamicResponse.data.data));
-    setPageOffset(pageOffset + 1);
+    setOffset(dynamicResponse.data.offset);
     setMore(dynamicResponse.data.has_more);
   }
   return loaded ? (
@@ -191,7 +191,7 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
     >
       <InfiniteScroll
         initialLoad={false}
-        pageStart={pageOffset}
+        pageStart={offset}
         loadMore={loadFunc}
         hasMore={more}
         useWindow={true}
