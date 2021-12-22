@@ -1,3 +1,5 @@
+import Axios from 'axios';
+import { useCallback, useMemo } from 'react';
 import {
   AddGroupApiReturn,
   DelGroupApiReturn,
@@ -7,24 +9,19 @@ import {
   GroupListApiReturn,
   GroupMemberApiReturn,
   GroupMemberQueryModel,
+  LoginApiReturn,
   MoveMemberApiReturn,
+  PinApiReturn,
+  RegisterApiReturn,
   SearchQueryModel,
+  SearchSubscribeApiReturn,
   TimelineApiReturn,
   TimelineQueryModel,
-} from './apiModels.d';
-import Axios from 'axios';
-import { useCallback, useMemo } from 'react';
-import {
-  LoginApiReturn,
-  RegisterApiReturn,
-  PinApiReturn,
-  SearchSubscribeApiReturn,
   UserApiReturn,
 } from './apiModels';
+import {} from './apiModels.d';
 
-/**
- * Access api endpoints.
- **/
+// Access ddhelper api endpoints.
 export function useApi(token?: string) {
   const axios = useMemo(() => {
     const axios = Axios.create({
@@ -50,7 +47,7 @@ export function useApi(token?: string) {
         } else if (err.response.status === 403 || err.response.status == 500) {
           err.code = err.response.data.code;
           err.msg = err.response.data.msg;
-        } else err.msg = err.message;
+        } else err.msg = err.response.data.msg;
         alert(`操作失败: ${err.msg}`);
         throw err;
       }
@@ -205,13 +202,3 @@ export function useApi(token?: string) {
     ),
   };
 }
-
-const axiosFetcher = async (url: string, params?: any) => (await Axios.get(url, { params })).data;
-/**
- * Access ddhelper api endpoints.
- */
-// export function useApi() {
-//   const axios = Axios.create({
-//     baseURL: process.env.REACT_APP_API_BACKEND_BASE,
-//   });
-// }
