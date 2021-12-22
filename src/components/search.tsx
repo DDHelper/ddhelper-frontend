@@ -182,6 +182,7 @@ const SearchPageView: React.FC<{}> = () => {
   }
 
   return (
+    //整个搜索框的组成
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
