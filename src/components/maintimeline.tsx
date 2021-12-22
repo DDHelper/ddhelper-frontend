@@ -92,7 +92,7 @@ function a11yProps(index: number) {
 }
 
 const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -105,10 +105,10 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        sx={{ borderRight: 1, borderColor: 'divider', minWidth: 100 }}
+        sx={{ borderRight: 1, borderColor: 'divider', minWidth: 96 }}
       >
         {props.data.map((item, idx) => {
-          return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} />;
+          return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} wrapped />;
         })}
       </Tabs>
       {props.data.map((item, idx) => {
