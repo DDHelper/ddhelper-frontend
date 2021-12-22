@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import TransitEnterexitOutlinedIcon from '@mui/icons-material/TransitEnterexitOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import Avatar from '@mui/material/Avatar';
@@ -305,26 +307,24 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           />
           <Tooltip title="移动">
             <IconButton onClick={handleMoveOpen}>
-              <DeleteIcon />
+              <TransitEnterexitOutlinedIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="复制">
             <IconButton onClick={handleCopyOpen}>
-              <DeleteIcon />
+              <ContentCopyOutlinedIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="删除">
             <IconButton>
-              <DeleteIcon />
+              <DeleteOutlinedIcon />
             </IconButton>
           </Tooltip>
         </Box>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton disabled>
+          <FilterListIcon />
+        </IconButton>
       )}
     </Toolbar>
   );
