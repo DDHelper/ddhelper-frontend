@@ -86,6 +86,21 @@ export interface GroupListApiReturn {
   }>;
 }
 
+// get GroupListMid
+export interface GroupListMidQueryModel {
+  mid: number;
+}
+
+export interface GroupListMidApiReturn {
+  code: number;
+  data: Array<{
+    gid: number;
+    group_name: string;
+    count: number;
+    in_this_group: boolean;
+  }>;
+}
+
 // get GroupMember
 export interface GroupMemberQueryModel {
   gid: number;

@@ -7,6 +7,8 @@ import {
   DynamicApiReturn,
   DynamicQueryModel,
   GroupListApiReturn,
+  GroupListMidApiReturn,
+  GroupListMidQueryModel,
   GroupMemberApiReturn,
   GroupMemberQueryModel,
   LoginApiReturn,
@@ -116,6 +118,21 @@ export function useApi(token?: string) {
                   headers: { authorization: `Bearer ${token}` },
                 }
               : {}
+          )
+        ).data,
+      [axios]
+    ),
+    getGroupListMid: useCallback(
+      async (qvalues: GroupListMidQueryModel, token?: string): Promise<GroupListMidApiReturn> =>
+        (
+          await axios.get<GroupListMidApiReturn>(
+            '/subscribe/group_list',
+            token
+              ? {
+                  headers: { authorization: `Bearer ${token}` },
+                  params: qvalues,
+                }
+              : { params: qvalues }
           )
         ).data,
       [axios]
