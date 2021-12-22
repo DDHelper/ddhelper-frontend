@@ -420,9 +420,4 @@ const MainTimelinePageView: React.FC<{}> = () => {
   );
 };
 
-/*
-< >
-{< > for item in []}
-</ >
-*/
 export default MainTimelinePageView;
