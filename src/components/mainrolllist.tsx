@@ -27,6 +27,7 @@ import Zoom from '@mui/material/Zoom';
 import { useApi } from '../utils/apiClient';
 import { GroupListApiReturn } from '../utils/apiModels';
 import PageHeader from './parts/header';
+import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
@@ -45,7 +46,7 @@ function timestampToTime(timestamp: number) {
 
 function ScrollTop() {
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -230,9 +231,7 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
       </InfiniteScroll>
     </List>
   ) : (
-    <Typography variant="h6" sx={{ mx: 8 }}>
-      no data
-    </Typography>
+    <PageLoader />
   );
 };
 
@@ -412,8 +411,6 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
 };
 
 const MainrolllistPageView: React.FC<{}> = () => {
-  const [expanded, setExpanded] = React.useState(false);
-
   const { getGroupList } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
@@ -428,10 +425,6 @@ const MainrolllistPageView: React.FC<{}> = () => {
     fetch();
   }, [getGroupList]);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
@@ -444,7 +437,11 @@ const MainrolllistPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          {loaded && <VerticalTabs code={groupListData!.code} data={groupListData!.data} />}
+          {loaded ? (
+            <VerticalTabs code={groupListData!.code} data={groupListData!.data} />
+          ) : (
+            <PageLoader />
+          )}
           <ScrollTop />
         </Box>
       </Box>
