@@ -56,7 +56,7 @@ function ScrollTop() {
         role="presentation"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
       >
-        <Fab size="small" aria-label="scroll back to top">
+        <Fab size="medium" aria-label="scroll back to top" color="primary">
           <KeyboardArrowUpIcon />
         </Fab>
       </Box>
@@ -198,7 +198,6 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
           const card = JSON.parse(item.raw.card);
           const desc = item.raw.desc;
           const dtype = item.dynamic_type;
-          console.log(card);
           // console.log(dtype);
           switch (dtype) {
             case 1:
@@ -207,7 +206,6 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
                   <ItemType1 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
                 </ListItem>
               );
-
             case 2:
               return (
                 <ListItem alignItems="flex-start">
@@ -224,6 +222,12 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
               return (
                 <ListItem alignItems="flex-start">
                   <ItemType8 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
+                </ListItem>
+              );
+            case 64:
+              return (
+                <ListItem alignItems="flex-start">
+                  <ItemType64 card={card} desc={desc} time={timestampToTime(item.timestamp)} />
                 </ListItem>
               );
           }
@@ -256,7 +260,18 @@ const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => 
         }
         title={uname}
         subheader={time}
-        action={<Chip label="转发" variant="outlined" />}
+        action={
+          <Chip
+            label="转发"
+            variant="outlined"
+            color="primary"
+            clickable
+            component="a"
+            href={`https://t.bilibili.com/${
+              props.desc ? props.desc.dynamic_id_str : props.card.id
+            }`}
+          />
+        }
       />
       {origin_dtype === 2 && (
         <Box sx={{ margin: 2 }}>
@@ -271,6 +286,11 @@ const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => 
       {origin_dtype === 8 && (
         <Box sx={{ margin: 2 }}>
           <ItemType8 card={card_origin} />
+        </Box>
+      )}
+      {origin_dtype === 64 && (
+        <Box sx={{ margin: 2 }}>
+          <ItemType64 card={card_origin} />
         </Box>
       )}
     </Card>
@@ -297,7 +317,18 @@ const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
         }
         title={uname}
         subheader={time}
-        action={<Chip label="图文" variant="outlined" />}
+        action={
+          <Chip
+            label="图文"
+            variant="outlined"
+            color="primary"
+            clickable
+            component="a"
+            href={`https://t.bilibili.com/${
+              props.desc ? props.desc.dynamic_id_str : props.card.id
+            }`}
+          />
+        }
       />
       <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant="body2" color="text.secondary">
@@ -309,8 +340,7 @@ const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
               <ImageListItem key={item.img}>
                 <img
                   src={`http://ddd.edrows.top/txcos/pic/?url=${item.img_src}@360w.webp`}
-                  // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                  // alt={item.title}
+                  alt=""
                   loading="lazy"
                 />
               </ImageListItem>
@@ -341,7 +371,18 @@ const ItemType4: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
         }
         title={uname}
         subheader={time}
-        action={<Chip label="文字" variant="outlined" />}
+        action={
+          <Chip
+            label="文字"
+            variant="outlined"
+            color="primary"
+            clickable
+            component="a"
+            href={`https://t.bilibili.com/${
+              props.desc ? props.desc.dynamic_id_str : props.card.id
+            }`}
+          />
+        }
       />
 
       <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -374,7 +415,18 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
         }
         title={uname}
         subheader={time}
-        action={<Chip label="视频" variant="outlined" />}
+        action={
+          <Chip
+            label="视频"
+            variant="outlined"
+            color="primary"
+            clickable
+            component="a"
+            href={`https://t.bilibili.com/${
+              props.desc ? props.desc.dynamic_id_str : props.card.id
+            }`}
+          />
+        }
       />
 
       <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -410,6 +462,74 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
   );
 };
 
+const ItemType64: React.FC<{ card: any; desc?: any; time?: string }> = (props) => {
+  // article
+  let uname = props.card.author.name;
+  let uid = props.card.author.mid;
+  let face = props.card.author.face;
+  let time = timestampToTime(props.card.ctime);
+  let title = props.card.title;
+  let cvid = props.card.id;
+  let desc = props.card.summary;
+  let pics = props.card.image_urls;
+  return (
+    <Card sx={{ display: 'flex', flexDirection: 'column', maxWidth: 1000 }}>
+      <CardHeader
+        avatar={
+          <Avatar
+            variant="circular"
+            src={`http://ddd.edrows.top/txcos/pic/?url=${face}@60w_60h.webp`}
+          />
+        }
+        title={uname}
+        subheader={time}
+        action={
+          <Chip
+            label="专栏"
+            variant="outlined"
+            color="primary"
+            clickable
+            component="a"
+            href={`https://t.bilibili.com/${
+              props.desc ? props.desc.dynamic_id_str : props.card.id
+            }`}
+          />
+        }
+      />
+
+      <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Link
+            variant="h6"
+            href={`https://bilibili.com/read/cv${cvid}`}
+            color="inherit"
+            underline="hover"
+            sx={{ ml: 2 }}
+          >
+            {title}
+          </Link>
+          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+            {desc}
+          </Typography>
+          <Box sx={{ ml: 2, marginTop: 2, maxWidth: 1000 }}>
+            <ImageList variant="masonry" cols={3} gap={8}>
+              {pics.map((item: any) => (
+                <ImageListItem key={item}>
+                  <img
+                    src={`http://ddd.edrows.top/txcos/pic/?url=${item}@360w.webp`}
+                    alt=""
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
 const MainrolllistPageView: React.FC<{}> = () => {
   const { getGroupList } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -418,7 +538,6 @@ const MainrolllistPageView: React.FC<{}> = () => {
     async function fetch() {
       const ListResponse = await getGroupList();
       setGroupListData(ListResponse);
-      console.log(ListResponse);
       // DO SOMETHING
       setLoaded(true);
     }
