@@ -4,9 +4,7 @@ import { useHistory } from 'react-router';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import MoreIcon from '@mui/icons-material/MoreVert';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import AppBar from '@mui/material/AppBar';
-import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -14,6 +12,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useApi } from '../../utils/apiClient';
 
 const PageHeader: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -22,6 +21,7 @@ const PageHeader: React.FC<{}> = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const history = useHistory();
+  const { postLogout } = useApi();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,10 +48,11 @@ const PageHeader: React.FC<{}> = () => {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // TODO: logout
+    const response = await postLogout();
     history.push({
-      pathname: '/user/user',
+      pathname: '/auth/login',
       state: {},
     });
   };
@@ -105,26 +106,8 @@ const PageHeader: React.FC<{}> = () => {
           注册
         </Button>
       </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+      <MenuItem onClick={handleToProfile}>用户信息</MenuItem>
+      <MenuItem onClick={handleLogout}>登出</MenuItem>
     </Menu>
   );
 
