@@ -1,20 +1,11 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 
@@ -22,7 +13,10 @@ const theme = createTheme();
 const drawerWidth = 240;
 
 const TemplatePageView: React.FC<{}> = () => {
+  // this is a common comment.
+
   return (
+    // it can be added here...
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -30,8 +24,15 @@ const TemplatePageView: React.FC<{}> = () => {
         <PageSider drawerWidth={drawerWidth} />
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3 }}
-          /* this is content */
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            // and even here like this!
+          }}
+          /*
+            comment inside angle brackets < >: this is content.
+            note that double slashes // cannot be used, only here.
+          */
         >
           <Toolbar />
           <Typography paragraph>
@@ -47,21 +48,24 @@ const TemplatePageView: React.FC<{}> = () => {
             ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac.
           </Typography>
           <Typography paragraph>
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-            facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-            tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-            consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus
-            sed vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in.
-            In hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-            et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique
-            sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo
-            viverra maecenas accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam
-            ultrices sagittis orci a.
+            But cannot be added between jsx elements for the compiler assumes this text as the
+            content to display on the page.
+            {
+              // try this! wrap your comment with a pair of curly brackets { } to add it between jsx elements.
+              // remember you should do this only if you have no other way out.
+            }
           </Typography>
+          {
+            // and this!
+          }
         </Box>
       </Box>
     </ThemeProvider>
+    // ...and here, naturally.
   );
 };
 
+/*
+  and can appear like this.
+*/
 export default TemplatePageView;

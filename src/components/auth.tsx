@@ -1,72 +1,91 @@
-import TextField from '@mui/material/TextField';
+import { serialize } from 'object-to-formdata';
 import React, { useState } from 'react';
-import { useApi } from '../utils/apiClient';
-import {
-  Button,
-  Paper,
-  Box,
-  Grid,
-  CssBaseline,
-  Typography,
-  Link,
-  Avatar,
-  Checkbox,
-  FormControlLabel,
-} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
+import { Md5 } from 'ts-md5/dist/md5';
+
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+
+import { useApi } from '../utils/apiClient';
+import { LoginValues } from '../utils/apiModels';
 
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
-  const { handleSubmit, reset, control } = useForm();
+  const { handleSubmit, register, control } = useForm();
   const { postLogin } = useApi();
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const history = useHistory();
+
+  const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
-    const response = postLogin(value);
-    console.log(response);
+    value.password = Md5.hashStr('DdHe1p0er' + value.password);
+    const formData = serialize(value);
+    const response = await postLogin(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else {
+      alert('登录成功');
+      history.push({
+        pathname: '/main',
+        state: {},
+      });
+    }
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+    <Box component="form" sx={{ mt: 1 }}>
       <TextField
         margin="normal"
         required
         fullWidth
         id="username"
-        label="Username"
-        name="username"
+        label="用户名"
         autoComplete="username"
         autoFocus
+        {...register('username', { required: true })}
       />
       <TextField
         margin="normal"
         required
         fullWidth
-        name="password"
-        label="Password"
+        label="密码"
         type="password"
         id="password"
         autoComplete="current-password"
+        {...register('password', { required: true })}
       />
-      <FormControlLabel
-        control={<Checkbox value="remember" color="primary" />}
-        label="Remember me"
-      />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        Sign In
+      <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="记住用户" />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleSubmit(onSubmit)}
+      >
+        登录
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link href="#" variant="body2" /* TODO: route to iforgot */>
-            忘记密码
-          </Link>
+          {
+            // <Link href="#" variant="body2" /* DESERTED: route to iforgot */>
+            //   忘记密码
+            // </Link>
+          }
         </Grid>
         <Grid item>
           <Link href="/auth/register" variant="body2">
-            {"Don't have an account? Sign Up"}
+            注册
           </Link>
         </Grid>
       </Grid>
