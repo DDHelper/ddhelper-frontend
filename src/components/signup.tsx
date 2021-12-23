@@ -38,8 +38,8 @@ const RegisterFormWithHook: React.FC<{}> = () => {
 
   const onSubmit = async (data: RegisterValues) => {
     let value = Object.assign(data, {});
-    value.password = Md5.hashStr(value.password);
-    value.confirmPassword = Md5.hashStr(value.confirmPassword);
+    value.password = Md5.hashStr('DdHe1p0er' + value.password);
+    value.confirmPassword = Md5.hashStr('DdHe1p0er' + value.confirmPassword);
     const formData = serialize(value);
     const response = await postRegister(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
@@ -54,7 +54,6 @@ const RegisterFormWithHook: React.FC<{}> = () => {
 
   const onSendEmail = async () => {
     let value = { email: await getValues('email') };
-    console.log(getValues('email'));
     const formData = serialize(value);
     const response = await postSendPin(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);

@@ -30,10 +30,9 @@ const LoginFormWithHook: React.FC<{}> = () => {
 
   const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
-    value.password = Md5.hashStr(value.password);
+    value.password = Md5.hashStr('DdHe1p0er' + value.password);
     const formData = serialize(value);
     const response = await postLogin(formData);
-    console.log(response.code !== 200);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     else {
       alert('登录成功');

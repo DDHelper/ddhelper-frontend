@@ -68,7 +68,7 @@ const UserContent: React.FC<UserApiReturn> = (props) => {
   );
 };
 
-const ChangePasswordFormWithHook: React.FC<{email: string}> = (props) => {
+const ChangePasswordFormWithHook: React.FC<{ email: string }> = (props) => {
   const {
     handleSubmit,
     register,
@@ -80,8 +80,8 @@ const ChangePasswordFormWithHook: React.FC<{email: string}> = (props) => {
 
   const onSubmit = async (data: any) => {
     let value = Object.assign(data, {});
-    value.new_password = Md5.hashStr(value.new_password);
-    value.old_password = Md5.hashStr(value.old_password);
+    value.new_password = Md5.hashStr('DdHe1p0er' + value.new_password);
+    value.old_password = Md5.hashStr('DdHe1p0er' + value.old_password);
     const formData = serialize(value);
     const response = await postChangePassword(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
@@ -95,7 +95,7 @@ const ChangePasswordFormWithHook: React.FC<{email: string}> = (props) => {
   };
 
   const onSendEmail = async () => {
-    const values = serialize({type: 'change_password'})
+    const values = serialize({ type: 'change_password' });
     const response = await postSendPin(values);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     else alert('已发送验证码');
@@ -156,7 +156,6 @@ const UserPageView: React.FC<{}> = () => {
     async function fetch() {
       const response = await getUserInfo();
       setUserdata(response);
-      console.log(response);
       // DO SOMETHING
       setLoaded(true);
     }
