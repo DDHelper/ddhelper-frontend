@@ -17,6 +17,7 @@ import { useApi } from '../utils/apiClient';
 import { GroupListApiReturn, GroupMemberApiReturn } from '../utils/apiModels';
 import EnhancedTable from './parts/enhancedtable';
 import PageHeader from './parts/header';
+import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
@@ -315,11 +316,13 @@ const GroupingPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          {loaded && (
+          {loaded ? (
             <VerticalTabs
               data={groupListData!.data}
               details={GroupMemberData!.map((item) => item.data)}
             />
+          ) : (
+            <PageLoader />
           )}
         </Box>
       </Box>

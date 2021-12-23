@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import Logo from '../assets/logo.png';
 import { useApi } from '../utils/apiClient';
 import { RegisterValues } from '../utils/apiModels';
 
@@ -149,12 +150,7 @@ const RegisterView: React.FC<{}> = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            DD Helper
-          </Typography>
+          <img src={Logo} alt="" style={{ height: 80 }}/>
           <Typography component="h1" variant="h6">
             注册
           </Typography>

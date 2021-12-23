@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { SettingsApplicationsRounded } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import SearchIcon from '@mui/icons-material/Search';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
@@ -40,6 +39,7 @@ import {
 } from '../utils/apiModels';
 import { getComparator, stableSort } from './parts/enhancedtable';
 import PageHeader from './parts/header';
+import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
@@ -177,12 +177,13 @@ export interface SimpleDialogProps {
   open: boolean;
   selectedMid: number;
   groupList: GroupListMidApiReturn;
+  buttonLoading: boolean;
   onClose: (value?: any) => void;
   onConfirm: (value: DoSubscribeValues) => void;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, onConfirm, selectedMid, groupList, open } = props;
+  const { onClose, onConfirm, buttonLoading, selectedMid, groupList, open } = props;
   const [selectedGids, setSelectedGids] = React.useState<number[]>([]);
   const [loaded, setLoaded] = useState<boolean>(false);
   useEffect(() => {
@@ -197,13 +198,11 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   const handleConfirm = (value: any) => {
-    console.log(value);
     onConfirm(value);
   };
 
   const handleSelect = (value?: any) => {
     setSelectedGids(value);
-    console.log(value);
   };
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -211,16 +210,17 @@ function SimpleDialog(props: SimpleDialogProps) {
       {loaded ? (
         <EnhancedTable rows={groupList!.data} mid={selectedMid} handleSelect={handleSelect} />
       ) : (
-        <div />
+        <PageLoader />
       )}
-      <Button
+      <LoadingButton
         variant="text"
         fullWidth
         sx={{ my: 1 }}
+        loading={buttonLoading}
         onClick={() => handleConfirm({ mid: selectedMid, gid: selectedGids })}
       >
         确定
-      </Button>
+      </LoadingButton>
     </Dialog>
   );
 }
@@ -228,6 +228,8 @@ function SimpleDialog(props: SimpleDialogProps) {
 const SearchPageView: React.FC<{}> = () => {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
+  const [searching, setSearching] = useState<boolean>(false);
   const [found, setFound] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<SearchSubscribeApiReturn>();
   const [groupListData, setGroupListData] = useState<GroupListMidApiReturn>();
@@ -246,11 +248,13 @@ const SearchPageView: React.FC<{}> = () => {
     setSelectedMid(mid);
     // DO SOMETHING
     setOpen(true);
+    setButtonLoading(false);
   };
 
   const onSubmit = async (data: { search_name: string }) => {
+    setSearching(true);
     const response = await getSearchSubscribe(data);
-    console.log(response);
+    setSearching(false);
     setSearchData(response);
     if (response.data.length !== 0) {
       setFound(true);
@@ -264,7 +268,7 @@ const SearchPageView: React.FC<{}> = () => {
   };
 
   const handleDoSubscribe = async (value: DoSubscribeValues) => {
-    console.log(value);
+    setButtonLoading(true);
     let formData = new FormData();
     Object.keys(value).forEach((key) => {
       if (key === 'gid') {
@@ -277,7 +281,7 @@ const SearchPageView: React.FC<{}> = () => {
       }
     });
     const response = await postDoSubscribe(formData);
-    console.log(response);
+    alert('操作成功');
     setOpen(false);
   };
 
@@ -297,7 +301,12 @@ const SearchPageView: React.FC<{}> = () => {
           {...register('search_name', { required: true })}
         />
         <Divider sx={{ height: 28, m: 1 }} orientation="vertical" />
-        <IconButton sx={{ p: '20px' }} aria-label="search" onClick={handleSubmit(onSubmit)}>
+        <IconButton
+          sx={{ p: '20px' }}
+          aria-label="search"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+        >
           <SearchIcon />
         </IconButton>
       </Box>
@@ -323,9 +332,10 @@ const SearchPageView: React.FC<{}> = () => {
               <Box sx={{ my: 2 }}>
                 <CustomizedInputBase />
               </Box>
-
-              {loaded &&
-                (found ? (
+              {loaded ? (
+                searching ? (
+                  <PageLoader />
+                ) : found ? (
                   <Box
                     sx={{
                       display: 'flex',
@@ -337,6 +347,7 @@ const SearchPageView: React.FC<{}> = () => {
                       selectedMid={selectedMid}
                       groupList={groupListData!}
                       open={open}
+                      buttonLoading={buttonLoading}
                       onClose={handleClose}
                       onConfirm={handleDoSubscribe}
                     />
@@ -413,9 +424,12 @@ const SearchPageView: React.FC<{}> = () => {
                   </Box>
                 ) : (
                   <Typography variant="h6" sx={{ mx: 8 }}>
-                    no data
+                    No Data
                   </Typography>
-                ))}
+                )
+              ) : (
+                <div />
+              )}
             </Box>
           </Typography>
 
