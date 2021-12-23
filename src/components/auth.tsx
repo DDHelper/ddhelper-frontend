@@ -78,9 +78,11 @@ const LoginFormWithHook: React.FC<{}> = () => {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link href="#" variant="body2" /* TODO: route to iforgot */>
-            忘记密码
-          </Link>
+          {
+            // <Link href="#" variant="body2" /* TODO: route to iforgot */>
+            //   忘记密码
+            // </Link>
+          }
         </Grid>
         <Grid item>
           <Link href="/auth/register" variant="body2">
