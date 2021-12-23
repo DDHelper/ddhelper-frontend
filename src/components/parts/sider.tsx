@@ -35,7 +35,7 @@ const PageSider: React.FC<props> = (props) => {
               <ListItemIcon>
                 <HomeOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary="主页" />
+              <ListItemText primary="动态列表" />
             </ListItem>
           </Link>
           <Link href="/timeline" underline="none">
@@ -43,7 +43,7 @@ const PageSider: React.FC<props> = (props) => {
               <ListItemIcon>
                 <TimelineIcon />
               </ListItemIcon>
-              <ListItemText primary="时间轴" />
+              <ListItemText primary="时间线" />
             </ListItem>
           </Link>
         </List>

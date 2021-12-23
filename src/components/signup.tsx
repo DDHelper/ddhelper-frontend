@@ -1,6 +1,7 @@
 import { serialize } from 'object-to-formdata';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 import { Md5 } from 'ts-md5/dist/md5';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -27,6 +28,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
   } = useForm();
   const { postRegister, postSendPin } = useApi();
   const [emailEmpty, setEmailEmpty] = useState<boolean>(true);
+  const history = useHistory();
 
   const checkEmailEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -41,7 +43,13 @@ const RegisterFormWithHook: React.FC<{}> = () => {
     const formData = serialize(value);
     const response = await postRegister(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
-    else alert('注册成功');
+    else {
+      alert('注册成功');
+      history.push({
+        pathname: '/auth/login',
+        state: {},
+      });
+    }
   };
 
   const onSendEmail = async () => {
