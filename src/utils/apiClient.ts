@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { useCallback, useMemo } from 'react';
 import {
   AddGroupApiReturn,
+  ChangePasswordApiReturn,
   DelGroupApiReturn,
   DoSubscribeApiReturn,
   DynamicApiReturn,
@@ -72,7 +73,17 @@ export function useApi(token?: string) {
     ),
     postSendPin: useCallback(
       async (values: FormData): Promise<PinApiReturn> =>
-        (await axios.post<PinApiReturn>('/account/send_pin/', values)).data,
+        (
+          await axios.post<PinApiReturn>(
+            '/account/send_pin/',
+            values
+          )
+        ).data,
+      [axios]
+    ),
+    postChangePassword: useCallback(
+      async (values: FormData): Promise<ChangePasswordApiReturn> =>
+        (await axios.post<ChangePasswordApiReturn>('/account/change_password/', values)).data,
       [axios]
     ),
     getUserInfo: useCallback(
@@ -200,26 +211,6 @@ export function useApi(token?: string) {
                 }
               : { params: qvalues }
           )
-        ).data,
-      [axios]
-    ),
-    postForgotPassword: useCallback(
-      async (email: string) =>
-        (
-          await axios.post(`/auth/forgot-password`, {
-            email,
-          })
-        ).data,
-      [axios]
-    ),
-    postResetPassword: useCallback(
-      async (code: string, password: string, passwordConfirmation: string) =>
-        (
-          await axios.post(`/auth/reset-password`, {
-            code,
-            password,
-            passwordConfirmation,
-          })
         ).data,
       [axios]
     ),

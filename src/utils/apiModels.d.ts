@@ -33,6 +33,12 @@ export interface PinApiReturn {
   msg: string;
 }
 
+// post ChangePassword
+export interface ChangePasswordApiReturn {
+  code: number;
+  msg: string;
+}
+
 // get User
 export interface UserModel {
   username: string;
