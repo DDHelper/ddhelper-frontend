@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -78,15 +79,22 @@ interface GroupingData {
 }
 const VerticalTabs: React.FC<GroupingData> = (props) => {
   const [value, setValue] = React.useState(1);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openNew, setOpenNew] = React.useState(false);
+  const [openRename, setOpenRename] = React.useState(false);
+  const [openDel, setOpenDel] = React.useState(false);
+  const handleOpenNew = () => setOpenNew(true);
+  const handleCloseNew = () => setOpenNew(false);
+  const handleOpenRename = () => setOpenRename(true);
+  const handleCloseRename = () => setOpenRename(false);
+  const handleOpenDel = () => setOpenDel(true);
+  const handleCloseDel = () => setOpenDel(false);
   const newGroupRef = useRef<HTMLInputElement>(null);
+  const renameGroupRef = useRef<HTMLInputElement>(null);
 
-  const [newGroupNameEmpty, setNewGroupNameEmpty] = useState<boolean>(true);
+  const [groupNameEmpty, setNewGroupNameEmpty] = useState<boolean>(true);
 
-  const { postAddGroup, deleteDelGroup } = useApi();
-  const checkNewGroupNameEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { postAddGroup, deleteDelGroup, postRenameGroup } = useApi();
+  const checkGroupNameEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newGroupName = e.target.value;
     if (newGroupName !== undefined && newGroupName !== '') setNewGroupNameEmpty(false);
     else setNewGroupNameEmpty(true);
@@ -99,7 +107,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
   const handleAddGroup = async () => {
     let value = { group_name: newGroupRef.current!.value };
     const formData = serialize(value);
-    handleClose();
+    handleCloseNew();
     const response = await postAddGroup(formData);
     // if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     alert('新增成功');
@@ -108,20 +116,25 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
 
   const handleDelGroup = async () => {
     let delvalue = `gid=${props.data[value - 1].gid}`;
-    // delvalue = Object.assign(delvalue, {})
     const response = await deleteDelGroup(delvalue);
-    // if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     alert('删除成功');
     window.location.reload();
   };
 
-  // TODO: rename group
+  const handleRenameGroup = async () => {
+    let renameValue = { gid: props.data[value - 1].gid, group_name: renameGroupRef.current!.value };
+    const formData = serialize(renameValue);
+    handleCloseRename();
+    const response = await postRenameGroup(formData);
+    alert('更名成功');
+    window.location.reload();
+  };
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openNew}
+        onClose={handleCloseNew}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -141,10 +154,84 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             新分组的名称
           </Typography>
-          <TextField variant="standard" inputRef={newGroupRef} onChange={checkNewGroupNameEmpty} />
-          <Button onClick={handleAddGroup} disabled={newGroupNameEmpty}>
+          <TextField
+            variant="standard"
+            inputRef={newGroupRef}
+            onChange={checkGroupNameEmpty}
+            autoFocus
+          />
+          <Button onClick={handleAddGroup} disabled={groupNameEmpty}>
             确认
           </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={openRename}
+        onClose={handleCloseRename}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            重命名
+          </Typography>
+          <TextField
+            variant="standard"
+            inputRef={renameGroupRef}
+            onChange={checkGroupNameEmpty}
+            defaultValue={props.data[value - 1].group_name}
+            autoFocus
+          />
+          <Button onClick={handleRenameGroup} disabled={groupNameEmpty}>
+            确认
+          </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={openDel}
+        onClose={handleCloseDel}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            确认删除
+          </Typography>
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Button onClick={handleDelGroup} variant="outlined" size="large" sx={{ marginTop: 2 }}>
+              确认
+            </Button>
+          </Grid>
         </Box>
       </Modal>
       <Tabs
@@ -154,22 +241,29 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
         onChange={handleChange}
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
-        <Button onClick={handleOpen}>新增分组</Button>
+        <Button onClick={handleOpenNew}>新增分组</Button>
         {props.data.map((item, idx) => {
           return (
             <Tab label={item.group_name} {...a11yProps(idx + 1)} key={idx + 1} value={idx + 1} />
           );
         })}
       </Tabs>
-      {props.data.map((item, idx) => {
-        const rows = props.details.find((i) => i.gid === item.gid)!.data;
-        return (
-          <TabPanel value={value} index={idx + 1}>
-            <EnhancedTable rows={rows} gid={item.gid} />
-            {idx + 1 !== 1 && <Button onClick={handleDelGroup}>删除分组</Button>}
-          </TabPanel>
-        );
-      })}
+      <Grid container spacing={2}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={6} md={7}>
+          {props.data.map((item, idx) => {
+            const rows = props.details.find((i) => i.gid === item.gid)!.data;
+            return (
+              <TabPanel value={value} index={idx + 1}>
+                <EnhancedTable rows={rows} gid={item.gid} />
+                {idx + 1 !== 1 && <Button onClick={handleOpenDel}>删除分组</Button>}
+                {idx + 1 !== 1 && <Button onClick={handleOpenRename}>重命名分组</Button>}
+              </TabPanel>
+            );
+          })}
+        </Grid>
+        <Grid item xs={2}></Grid>
+      </Grid>
     </Box>
   );
 };
