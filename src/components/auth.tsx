@@ -4,13 +4,9 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { Md5 } from 'ts-md5/dist/md5';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
@@ -18,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import Logo from '../assets/logo.png';
 import { useApi } from '../utils/apiClient';
 import { LoginValues } from '../utils/apiModels';
 
@@ -121,12 +118,7 @@ const AuthView: React.FC<{}> = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              DD Helper
-            </Typography>
+            <img src={Logo} alt="" style={{ height: 80 }}/>
             <Typography component="h1" variant="h6">
               登录
             </Typography>
