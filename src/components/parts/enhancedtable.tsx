@@ -31,7 +31,11 @@ import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
 
 import { useApi } from '../../utils/apiClient';
-import { GroupListApiReturn } from '../../utils/apiModels';
+import {
+  DoSubscribeValues,
+  GroupListApiReturn,
+  GroupListMidApiReturn,
+} from '../../utils/apiModels';
 
 interface Data {
   mid: number;
@@ -216,10 +220,11 @@ interface EnhancedTableToolbarProps {
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const { selected, current_gid } = props;
   const numSelected = selected.length;
-  const { getGroupList, postMoveMember } = useApi();
+  const { getGroupList, getGroupListMid, postMoveMember, postDoSubscribe } = useApi();
   const [open, setOpen] = useState(false);
   const [remove, setRemove] = useState<0 | 1>(0);
   const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
+  const [groupListMidData, setGroupListMidData] = useState<GroupListMidApiReturn>();
 
   useEffect(() => {
     async function fetch() {
@@ -242,6 +247,43 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     setGroupListData(ListResponse);
     setRemove(0);
     setOpen(true);
+  };
+
+  const handleDelete = async () => {
+    for (let idx in selected) {
+      const ListMidResponse = await getGroupListMid({ mid: selected[idx] });
+      let subscribedGids = [];
+      for (let idx in ListMidResponse!.data) {
+        if (ListMidResponse!.data[idx].in_this_group) {
+          subscribedGids.push(ListMidResponse!.data[idx].gid);
+        }
+      }
+      const toDelIdx = subscribedGids.indexOf(current_gid);
+      if (toDelIdx !== -1) {
+        subscribedGids.splice(toDelIdx, 1);
+      }
+      handleDoSubscribe({ mid: selected[idx], gid: subscribedGids });
+    }
+    alert('删除成功');
+    window.location.reload();
+  };
+
+  const handleDoSubscribe = async (value: DoSubscribeValues) => {
+    console.log(value);
+    let formData = new FormData();
+    Object.keys(value).forEach((key) => {
+      if (key === 'gid') {
+        const groups = value[key];
+        for (let i = 0; i < groups.length; i++) {
+          formData.append(key, groups[i].toString());
+        }
+      } else {
+        formData.append(key, value[key as keyof DoSubscribeValues].toString());
+      }
+    });
+    const response = await postDoSubscribe(formData);
+    console.log(response);
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -317,7 +359,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </Tooltip>
           <Tooltip title="删除">
             <IconButton>
-              <DeleteOutlinedIcon />
+              <DeleteOutlinedIcon onClick={handleDelete} />
             </IconButton>
           </Tooltip>
         </Box>
