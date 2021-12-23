@@ -64,7 +64,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 const theme = createTheme();
 const drawerWidth = 240;
 
-function timestampToTime(timestamp: number) {
+function timestampToTime(timestamp: number) {//把后端发送时间戳转换为北京时区时间，具体到秒
   let date = new Date(timestamp * 1000); //timestamp 为10位需*1000，timestamp 为13位的话不需乘1000
   let Y = date.getFullYear() + '-';
   let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -174,7 +174,7 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
         const dtype = item.dynamic_type;
         console.log(card);
         // console.log(dtype);
-        switch (dtype) {
+        switch (dtype) {//按照B站后台的动态类型，分别给出不同的动态处理策略
           case 1:
             return (
               <ListItem alignItems="flex-start">
@@ -210,15 +210,15 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
   );
 };
 
-const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => {
+const ItemType1: React.FC<{ card: any; desc?: any; time: string }> = (props) => {//转发动态的处理策略
   // repost
-  let uname = props.card.user.uname;
-  let uid = props.card.user.uid;
-  let face = props.card.user.face;
-  let time = props.time;
-  let item = props.card.item;
-  let card_origin = JSON.parse(props.card.origin);
-  let origin_dtype = props.card.item.orig_type;
+  let uname = props.card.user.uname;//读入up主姓名
+  let uid = props.card.user.uid;//读入up主UID
+  let face = props.card.user.face;//读入up主头像
+  let time = props.time;////读入发布时间
+  let item = props.card.item;//读入转发者的动态内容
+  let card_origin = JSON.parse(props.card.origin);//读入被转发者的动态
+  let origin_dtype = props.card.item.orig_type;//
 
   return (
     <Card>
