@@ -65,7 +65,6 @@ const LoginFormWithHook: React.FC<{}> = () => {
         autoComplete="current-password"
         {...register('password', { required: true })}
       />
-      <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="记住用户" />
       <Button
         type="submit"
         fullWidth
