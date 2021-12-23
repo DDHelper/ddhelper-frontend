@@ -10,52 +10,10 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { alpha, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 const PageHeader: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -83,15 +41,15 @@ const PageHeader: React.FC<{}> = () => {
   };
 
   const handleToProfile = () => {
-    //TODO: give a link to profile
+    // TODO: give a link to profile SOLVED
     history.push({
-      pathname: '/user/profile',
+      pathname: '/user',
       state: {},
     });
   };
 
-  const handleToUser = () => {
-    //TODO: give a link to user
+  const handleLogout = () => {
+    // TODO: logout
     history.push({
       pathname: '/user/user',
       state: {},
@@ -115,8 +73,8 @@ const PageHeader: React.FC<{}> = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleToProfile}>Profile</MenuItem>
-      <MenuItem onClick={handleToUser}>My account</MenuItem>
+      <MenuItem onClick={handleToProfile}>用户信息</MenuItem>
+      <MenuItem onClick={handleLogout}>登出</MenuItem>
     </Menu>
   );
 

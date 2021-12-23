@@ -78,6 +78,7 @@ const UserPageView: React.FC<{}> = () => {
     fetch();
   }, [getUserInfo]);
 
+  // TODO: add change password and logout
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
