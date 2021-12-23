@@ -39,6 +39,11 @@ export interface ChangePasswordApiReturn {
   msg: string;
 }
 
+// post Logout
+export interface LogoutApiReturn {
+  code: number;
+}
+
 // get User
 export interface UserModel {
   username: string;
@@ -166,7 +171,7 @@ export interface MoveMemberApiReturn {
 export interface DynamicQueryModel {
   gid: number;
   offset: number;
-  size : number;
+  size: number;
 }
 
 export interface DynamicApiReturn {
@@ -183,14 +188,14 @@ export interface DynamicApiReturn {
       timestamp: number;
       raw: any;
     }>;
-  }
+  };
 }
 
 // get Timeline
 export interface TimelineQueryModel {
   gid: number;
   offset: number;
-  size : number;
+  size: number;
 }
 
 export interface TimelineApiReturn {
@@ -201,6 +206,5 @@ export interface TimelineApiReturn {
     group_name: string;
     offset: number;
     data: Array<any>;
-  }
+  };
 }
-

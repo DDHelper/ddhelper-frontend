@@ -13,6 +13,7 @@ import {
   GroupMemberApiReturn,
   GroupMemberQueryModel,
   LoginApiReturn,
+  LogoutApiReturn,
   MoveMemberApiReturn,
   PinApiReturn,
   RegisterApiReturn,
@@ -73,17 +74,17 @@ export function useApi(token?: string) {
     ),
     postSendPin: useCallback(
       async (values: FormData): Promise<PinApiReturn> =>
-        (
-          await axios.post<PinApiReturn>(
-            '/account/send_pin/',
-            values
-          )
-        ).data,
+        (await axios.post<PinApiReturn>('/account/send_pin/', values)).data,
       [axios]
     ),
     postChangePassword: useCallback(
       async (values: FormData): Promise<ChangePasswordApiReturn> =>
         (await axios.post<ChangePasswordApiReturn>('/account/change_password/', values)).data,
+      [axios]
+    ),
+    postLogout: useCallback(
+      async (): Promise<LogoutApiReturn> =>
+        (await axios.post<LogoutApiReturn>('account/logout/')).data,
       [axios]
     ),
     getUserInfo: useCallback(
