@@ -26,6 +26,7 @@ import Typography from '@mui/material/Typography';
 import { useApi } from '../utils/apiClient';
 import { GroupListApiReturn, TimelineApiReturn } from '../utils/apiModels';
 import PageHeader from './parts/header';
+import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
@@ -137,9 +138,7 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   const { getTimeline } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [pageOffset, setPageOffset] = useState<number>(0);
-  const [timelineData, setTimelineData] = useState<TimelineApiReturn>();
   const [sortedTimelineData, setSortedTimelineData] = useState<Array<Array<any>>>([]);
-  const [dates, setDates] = useState<any[]>();
 
   useEffect(() => {
     async function fetch() {
@@ -194,77 +193,83 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
   }, [getTimeline, props.gid]);
 
   return loaded ? (
-    <Stack
-      direction="row-reverse"
-      //justifyContent="center"
-      alignItems="baseline"
-      spacing={0}
-      sx={{ display: 'flex', overflowX: 'auto' }}
-    >
-      {sortedTimelineData!.map((item, idx) => {
-        return (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Chip label={timestampToDate(item[0].event_time).date} sx={{ mx: 2 }} />
-            <Timeline sx={{ maxWidth: 400 }}>
-              {item.map((item, idx) => {
-                switch (item.type) {
-                  case 'LO':
-                    return (
-                      <ItemLO
-                        dynamic_id={item.dynamic_id}
-                        event_time={item.event_time}
-                        raw={item.raw}
-                        text={item.text}
-                        type={item.type}
-                      />
-                    );
+    sortedTimelineData.length ? (
+      <Stack
+        direction="row-reverse"
+        //justifyContent="center"
+        alignItems="baseline"
+        spacing={0}
+        sx={{ display: 'flex', overflowX: 'auto' }}
+      >
+        {sortedTimelineData!.map((item, idx) => {
+          return (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Chip label={timestampToDate(item[0].event_time).date} sx={{ mx: 2 }} />
+              <Timeline sx={{ maxWidth: 400 }}>
+                {item.map((item, idx) => {
+                  switch (item.type) {
+                    case 'LO':
+                      return (
+                        <ItemLO
+                          dynamic_id={item.dynamic_id}
+                          event_time={item.event_time}
+                          raw={item.raw}
+                          text={item.text}
+                          type={item.type}
+                        />
+                      );
 
-                  case 'RE':
-                    return (
-                      <ItemRE
-                        dynamic_id={item.dynamic_id}
-                        event_time={item.event_time}
-                        raw={item.raw}
-                        text={item.text}
-                        type={item.type}
-                      />
-                    );
-                  case 'ST':
-                    return (
-                      <ItemST
-                        dynamic_id={item.dynamic_id}
-                        event_time={item.event_time}
-                        raw={item.raw}
-                        text={item.text}
-                        type={item.type}
-                      />
-                    );
-                  case 'UN':
-                    return (
-                      <ItemUN
-                        dynamic_id={item.dynamic_id}
-                        event_time={item.event_time}
-                        raw={item.raw}
-                        text={item.text}
-                        type={item.type}
-                      />
-                    );
-                }
-                return (
-                  <ItemST
-                    dynamic_id={item.dynamic_id}
-                    event_time={item.event_time}
-                    raw={item.raw}
-                    text={item.text}
-                    type={item.type}
-                  />
-                );
-              })}
-            </Timeline>
-          </Box>
-        );
-      })}
-    </Stack>
+                    case 'RE':
+                      return (
+                        <ItemRE
+                          dynamic_id={item.dynamic_id}
+                          event_time={item.event_time}
+                          raw={item.raw}
+                          text={item.text}
+                          type={item.type}
+                        />
+                      );
+                    case 'ST':
+                      return (
+                        <ItemST
+                          dynamic_id={item.dynamic_id}
+                          event_time={item.event_time}
+                          raw={item.raw}
+                          text={item.text}
+                          type={item.type}
+                        />
+                      );
+                    case 'UN':
+                      return (
+                        <ItemUN
+                          dynamic_id={item.dynamic_id}
+                          event_time={item.event_time}
+                          raw={item.raw}
+                          text={item.text}
+                          type={item.type}
+                        />
+                      );
+                  }
+                  return (
+                    <ItemST
+                      dynamic_id={item.dynamic_id}
+                      event_time={item.event_time}
+                      raw={item.raw}
+                      text={item.text}
+                      type={item.type}
+                    />
+                  );
+                })}
+              </Timeline>
+            </Box>
+          );
+        })}
+      </Stack>
+    ) : (
+      <Typography variant="h6" sx={{ mx: 8 }}>
+        No Data
+      </Typography>
+    )
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>
       Loading ...
@@ -413,7 +418,11 @@ const MainTimelinePageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          {loaded && <VerticalTabs code={groupListData!.code} data={groupListData!.data} />}
+          {loaded ? (
+            <VerticalTabs code={groupListData!.code} data={groupListData!.data} />
+          ) : (
+            <PageLoader />
+          )}
         </Box>
       </Box>
     </ThemeProvider>
