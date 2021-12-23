@@ -15,6 +15,7 @@ import {
   MoveMemberApiReturn,
   PinApiReturn,
   RegisterApiReturn,
+  RenameGroupApiReturn,
   SearchQueryModel,
   SearchSubscribeApiReturn,
   TimelineApiReturn,
@@ -155,6 +156,11 @@ export function useApi(token?: string) {
     postAddGroup: useCallback(
       async (values: FormData): Promise<AddGroupApiReturn> =>
         (await axios.post<AddGroupApiReturn>('/subscribe/group/add/', values)).data,
+      [axios]
+    ),
+    postRenameGroup: useCallback(
+      async (values: FormData): Promise<RenameGroupApiReturn> =>
+        (await axios.post<RenameGroupApiReturn>('/subscribe/group/update/', values)).data,
       [axios]
     ),
     deleteDelGroup: useCallback(

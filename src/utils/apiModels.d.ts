@@ -135,6 +135,15 @@ export interface AddGroupApiReturn {
   };
 }
 
+// post RenameGroup
+export interface RenameGroupApiReturn {
+  code: number;
+  data: {
+    gid: number;
+    group_name: string;
+  };
+}
+
 // post DelGroup
 export interface DelGroupApiReturn {
   code: number;
