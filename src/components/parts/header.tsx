@@ -41,7 +41,7 @@ const PageHeader: React.FC<{}> = () => {
   };
 
   const handleToProfile = () => {
-    // TODO: give a link to profile SOLVED
+    // SOLVED: give a link to profile SOLVED
     history.push({
       pathname: '/user',
       state: {},

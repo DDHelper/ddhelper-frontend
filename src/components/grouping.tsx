@@ -115,6 +115,8 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
     window.location.reload();
   };
 
+  // TODO: rename group
+
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
       <Modal
