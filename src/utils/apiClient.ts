@@ -45,16 +45,14 @@ export function useApi(token?: string) {
     axios.interceptors.response.use(
       (res) => res,
       (err) => {
-        // console.log(err);
-        if (err.response.status === 400) {
-          err.code = err.response.data.code;
-          err.msg = err.response.data.msg;
-        } else if (err.response.status === 403 || err.response.status == 500) {
-          err.code = err.response.data.code;
-          err.msg = err.response.data.msg;
-        } else err.msg = err.response.data.msg;
+        console.log(err.response.status);
+        err.code = err.response.data.code;
+        err.msg = err.response.data.msg;
         alert(`操作失败: ${err.msg}`);
-        throw err;
+        if (err.response?.status === 403 && err.msg === '未登录') {
+          localStorage.clear();
+          window.location.href = '/auth/login';
+        } else throw err;
       }
     );
 
