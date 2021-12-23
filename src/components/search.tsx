@@ -41,6 +41,7 @@ import { getComparator, stableSort } from './parts/enhancedtable';
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 import { SettingsApplicationsRounded } from '@mui/icons-material';
+import Button from '@mui/material/Button';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -51,15 +52,33 @@ const EnhancedTable = (props: {
     gid: number;
     group_name: string;
     count: number;
+    in_this_group: boolean;
   }[];
   mid: number;
-  selected: number[];
   handleSelect: (value?: any) => void;
 }) => {
   const [order, setOrder] = React.useState<Order>('asc');
   const [selected, setSelected] = React.useState<number[]>([]);
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [page, setPage] = React.useState(0);
   const rowsPerPage = 10;
+
+  useEffect(() => {
+    async function initSelect() {
+      let initSelectedGids = [];
+      for (let idx in props.rows) {
+        if (props.rows[idx].in_this_group) {
+          initSelectedGids.push(props.rows[idx].gid);
+        }
+      }
+      setSelected(initSelectedGids);
+      // console.log(initSelectedGids);
+    }
+    if (loaded === false) {
+      initSelect();
+      setLoaded(true);
+    }
+  });
 
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
@@ -92,66 +111,65 @@ const EnhancedTable = (props: {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table aria-labelledby="tableTitle" size="medium">
-            <TableBody>
-              {stableSort(props.rows, getComparator(order, 'gid'))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.gid);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.gid)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.gid}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        <Avatar>
-                          <PeopleOutlineIcon />
-                        </Avatar>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="subtitle1">{row.group_name}</Typography>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10]}
-          component="div"
-          count={props.rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-        />
-      </Paper>
+      <TableContainer>
+        <Table aria-labelledby="tableTitle" size="medium">
+          <TableBody>
+            {stableSort(props.rows, getComparator(order, 'gid'))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.gid);
+                const labelId = `enhanced-table-checkbox-${index}`;
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.gid)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.gid}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        defaultChecked={isItemSelected}
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <Avatar>
+                        <PeopleOutlineIcon />
+                      </Avatar>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="subtitle1">{row.group_name}</Typography>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: 53 * emptyRows,
+                }}
+              >
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10]}
+        component="div"
+        count={props.rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+      />
     </Box>
   );
 };
@@ -160,17 +178,17 @@ export interface SimpleDialogProps {
   open: boolean;
   selectedMid: number;
   groupList: GroupListMidApiReturn;
-  initSelectedGids: number[];
   onClose: (value?: any) => void;
   onConfirm: (value: DoSubscribeValues) => void;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, onConfirm, selectedMid, groupList, initSelectedGids, open } = props;
-  const [selectedGids, setSelectedGids] = React.useState<number[]>(initSelectedGids);
+  const { onClose, onConfirm, selectedMid, groupList, open } = props;
+  const [selectedGids, setSelectedGids] = React.useState<number[]>([]);
+  const [loaded, setLoaded] = useState<boolean>(false);
   useEffect(() => {
     async function fetch() {
-      // if (groupList !== undefined) setLoaded(true);
+      if (groupList !== undefined) setLoaded(true);
     }
     fetch();
   });
@@ -191,16 +209,19 @@ function SimpleDialog(props: SimpleDialogProps) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>分组</DialogTitle>
-      {open ? (
-        <EnhancedTable
-          rows={groupList!.data}
-          mid={selectedMid}
-          selected={selectedGids}
-          handleSelect={handleSelect}
-        />
+      {loaded ? (
+        <EnhancedTable rows={groupList!.data} mid={selectedMid} handleSelect={handleSelect} />
       ) : (
         <div />
       )}
+      <Button
+        variant="text"
+        fullWidth
+        sx={{ my: 1 }}
+        onClick={() => handleConfirm({ mid: selectedMid, gid: selectedGids })}
+      >
+        确定
+      </Button>
     </Dialog>
   );
 }
@@ -212,29 +233,18 @@ const SearchPageView: React.FC<{}> = () => {
   const [searchData, setSearchData] = useState<SearchSubscribeApiReturn>();
   const [groupListData, setGroupListData] = useState<GroupListMidApiReturn>();
   const [selectedGids, setSelectedGids] = React.useState<number[]>([]);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedMid, setSelectedMid] = React.useState(1);
 
   const { handleSubmit, register } = useForm();
   const { getSearchSubscribe, getGroupListMid, postDoSubscribe } = useApi();
 
   const handleClickOpen = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
+    mid: number
   ) => {
-
-    const ListResponse = await getGroupListMid({ mid: index });
-
+    const ListResponse = await getGroupListMid({ mid: mid });
     setGroupListData(ListResponse);
-    let initSelectedGids = [];
-    for (let idx in ListResponse.data) {
-      if (ListResponse.data[idx].in_this_group) {
-        initSelectedGids.push(ListResponse.data[idx].gid);
-      }
-    }
-    setSelectedGids(initSelectedGids);
-    console.log(index);
-    setSelectedIndex(index);
-
+    setSelectedMid(mid);
     // DO SOMETHING
     setOpen(true);
   };
@@ -255,6 +265,7 @@ const SearchPageView: React.FC<{}> = () => {
   };
 
   const handleDoSubscribe = async (value: DoSubscribeValues) => {
+    console.log(value);
     let formData = new FormData();
     Object.keys(value).forEach((key) => {
       if (key === 'gid') {
@@ -267,7 +278,7 @@ const SearchPageView: React.FC<{}> = () => {
       }
     });
     const response = await postDoSubscribe(formData);
-    // console.log(response);
+    console.log(response);
     setOpen(false);
   };
 
@@ -324,11 +335,10 @@ const SearchPageView: React.FC<{}> = () => {
                     }}
                   >
                     <SimpleDialog
-                      selectedMid={searchData!.data[selectedIndex].mid}
+                      selectedMid={selectedMid}
                       groupList={groupListData!}
-                      initSelectedGids={selectedGids}
                       open={open}
-                      onClose={handleDoSubscribe}
+                      onClose={handleClose}
                       onConfirm={handleDoSubscribe}
                     />
                     <List
