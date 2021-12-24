@@ -298,7 +298,11 @@ const ItemRE: React.FC<TimelineEvent> = (props) => {
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+        <Link
+          href={`https://t.bilibili.com/${
+            props.raw.desc ? props.raw.desc.dynamic_id_str : props.dynamic_id
+          }`}
+        >
           <TimelineDot color="primary" variant="outlined">
             <PlayCircleOutlineOutlinedIcon />
           </TimelineDot>
@@ -326,7 +330,11 @@ const ItemST: React.FC<TimelineEvent> = (props) => {
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+        <Link
+          href={`https://t.bilibili.com/${
+            props.raw.desc ? props.raw.desc.dynamic_id_str : props.dynamic_id
+          }`}
+        >
           <TimelineDot color="primary" variant="outlined">
             <TvOutlinedIcon />
           </TimelineDot>
@@ -354,7 +362,11 @@ const ItemLO: React.FC<TimelineEvent> = (props) => {
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+        <Link
+          href={`https://t.bilibili.com/${
+            props.raw.desc ? props.raw.desc.dynamic_id_str : props.dynamic_id
+          }`}
+        >
           <TimelineDot color="primary" variant="outlined">
             <EmojiEventsOutlinedIcon />
           </TimelineDot>
@@ -383,7 +395,11 @@ const ItemUN: React.FC<TimelineEvent> = (props) => {
       </TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineConnector />
-        <Link href={`https://t.bilibili.com/${props.raw.desc.dynamic_id_str}`}>
+        <Link
+          href={`https://t.bilibili.com/${
+            props.raw.desc ? props.raw.desc.dynamic_id_str : props.dynamic_id
+          }`}
+        >
           <TimelineDot color="primary" variant="outlined">
             <TextSnippetOutlinedIcon />
           </TimelineDot>
