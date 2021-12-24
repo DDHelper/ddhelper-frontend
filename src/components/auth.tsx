@@ -15,9 +15,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import Logo from '../assets/logo.png';
+
+import Wrapup0 from '../assets/wrapup0.png';
+import Wrapup1 from '../assets/wrapup1.png';
+import Wrapup2 from '../assets/wrapup2.png';
+import Wrapup3 from '../assets/wrapup3.png';
 import { useApi } from '../utils/apiClient';
 import { LoginValues } from '../utils/apiModels';
 
+const Wrapups = [Wrapup0, Wrapup1, Wrapup2, Wrapup3];
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
@@ -100,12 +106,11 @@ const AuthView: React.FC<{}> = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
-            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url(${Wrapups[Math.floor(Math.random() * 4)]})`,
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'left',
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -118,7 +123,7 @@ const AuthView: React.FC<{}> = () => {
               alignItems: 'center',
             }}
           >
-            <img src={Logo} alt="" style={{ height: 80 }}/>
+            <img src={Logo} alt="" style={{ height: 80 }} />
             <Typography component="h1" variant="h6">
               登录
             </Typography>
