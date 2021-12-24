@@ -267,9 +267,14 @@ const TimelineTree: React.FC<{ gid: number }> = (props) => {
         })}
       </Stack>
     ) : (
-      <Typography variant="h6" sx={{ mx: 8 }}>
-        No Data
-      </Typography>
+      <Box>
+        <Typography variant="h6" sx={{ mx: 8 }}>
+          No Data
+        </Typography>
+        <Typography variant="subtitle2" sx={{ mx: 8 }}>
+          时间线展示过去 2 天至未来 5 天之内的高优先级信息。
+        </Typography>
+      </Box>
     )
   ) : (
     <Typography variant="h6" sx={{ mx: 8 }}>

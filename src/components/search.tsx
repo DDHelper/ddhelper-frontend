@@ -298,6 +298,7 @@ const SearchPageView: React.FC<{}> = () => {
           sx={{ ml: 1, mr: 1, flex: 1 }}
           autoFocus
           variant="standard"
+          placeholder="创作者名"
           {...register('search_name', { required: true })}
         />
         <Divider sx={{ height: 28, m: 1 }} orientation="vertical" />
@@ -429,9 +430,14 @@ const SearchPageView: React.FC<{}> = () => {
                     </List>
                   </Box>
                 ) : (
-                  <Typography variant="h6" sx={{ mx: 8 }}>
-                    No Data
-                  </Typography>
+                  <Box>
+                    <Typography variant="h6" sx={{ mx: 8 }}>
+                      No Data
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ mx: 8 }}>
+                      未搜索到符合条件的创作者。
+                    </Typography>
+                  </Box>
                 )
               ) : (
                 <div />
