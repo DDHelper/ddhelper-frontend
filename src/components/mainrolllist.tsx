@@ -198,7 +198,12 @@ const RolllistItem: React.FC<{ gid: number }> = (props) => {
           const card = JSON.parse(item.raw.card);
           const desc = item.raw.desc;
           const dtype = item.dynamic_type;
-          // console.log(dtype);
+          // dtype 1 repost
+          // dtype 2 pic and text
+          // dtype 4 pure text
+          // dtype 8 video
+          // dtype 64 article
+          // TODO: dtype 2048 decoration
           switch (dtype) {
             case 1:
               return (
@@ -567,5 +572,19 @@ const MainrolllistPageView: React.FC<{}> = () => {
     </ThemeProvider>
   );
 };
+
+/*
+  groups.map({
+    <div>
+      <Tab />
+      <TabPanel>
+        sortedData.map({
+          switch
+            <#item />
+        })
+      </TabPanel>
+    </div>
+  })
+*/
 
 export default MainrolllistPageView;
