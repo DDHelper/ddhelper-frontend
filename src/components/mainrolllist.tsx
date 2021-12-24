@@ -336,10 +336,10 @@ const ItemType2: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
         }
       />
       <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary">
           {content}
         </Typography>
-        <Box sx={{ maxWidth: 1000 }}>
+        <Box sx={{ maxWidth: 1000, marginTop: 2 }}>
           <ImageList variant="masonry" cols={3} gap={8}>
             {pics.map((item: any) => (
               <ImageListItem key={item.img}>
@@ -458,7 +458,7 @@ const ItemType8: React.FC<{ card: any; desc?: any; time?: string }> = (props) =>
           >
             {title}
           </Link>
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ ml: 2 }}>
             {desc}
           </Typography>
         </Box>
@@ -513,7 +513,7 @@ const ItemType64: React.FC<{ card: any; desc?: any; time?: string }> = (props) =
           >
             {title}
           </Link>
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ ml: 2 }}>
             {desc}
           </Typography>
           <Box sx={{ ml: 2, marginTop: 2, maxWidth: 1000 }}>
