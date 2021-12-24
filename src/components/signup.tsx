@@ -1,77 +1,137 @@
-import TextField from '@mui/material/TextField';
+import { serialize } from 'object-to-formdata';
 import React, { useState } from 'react';
-import { useApi } from '../utils/apiClient';
-import {
-  Button,
-  Paper,
-  Box,
-  Grid,
-  CssBaseline,
-  Typography,
-  Link,
-  Avatar,
-  Checkbox,
-  FormControlLabel,
-  Container,
-} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+import { Md5 } from 'ts-md5/dist/md5';
+
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+
+import Logo from '../assets/logo.png';
+import { useApi } from '../utils/apiClient';
+import { RegisterValues } from '../utils/apiModels';
 
 const theme = createTheme();
 
 const RegisterFormWithHook: React.FC<{}> = () => {
-  const { handleSubmit, reset, control } = useForm();
-  const { postRegister } = useApi();
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const {
+    handleSubmit,
+    register,
+    getValues,
+    formState: { errors },
+  } = useForm();
+  const { postRegister, postSendPin } = useApi();
+  const [emailEmpty, setEmailEmpty] = useState<boolean>(true);
+  const history = useHistory();
+
+  const checkEmailEmpty = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    if (email !== undefined && email !== '') setEmailEmpty(false);
+    else setEmailEmpty(true);
+  };
+
+  const onSubmit = async (data: RegisterValues) => {
     let value = Object.assign(data, {});
-    const response = postRegister(value);
-    console.log(response);
+    value.password = Md5.hashStr('DdHe1p0er' + value.password);
+    value.confirmPassword = Md5.hashStr('DdHe1p0er' + value.confirmPassword);
+    const formData = serialize(value);
+    const response = await postRegister(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else {
+      alert('注册成功');
+      history.push({
+        pathname: '/auth/login',
+        state: {},
+      });
+    }
+  };
+
+  const onSendEmail = async () => {
+    let value = { email: await getValues('email') };
+    const formData = serialize(value);
+    const response = await postSendPin(formData);
+    if (response.code !== 200) alert(`操作失败: ${response.msg}`);
+    else alert('已发送验证码');
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
-      <TextField
-        margin="normal"
-        required
+    <Box>
+      <Box component="form" sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="用户名"
+          autoComplete="username"
+          autoFocus
+          {...register('username', { required: true })}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="密码"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          {...register('password', { required: true })}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="confirmPassword"
+          type="password"
+          label="确认密码"
+          {...register('confirmPassword', { required: true })}
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          required
+          label="电子邮箱"
+          id="email"
+          autoComplete="email"
+          {...register('email', {
+            required: true,
+            onChange: checkEmailEmpty,
+          })}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="验证码"
+          id="pin"
+          autoComplete="pin"
+          {...register('pin', { required: true })}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handleSubmit(onSubmit)}
+        >
+          注册
+        </Button>
+      </Box>
+      <Button
         fullWidth
-        id="username"
-        label="Username"
-        name="username"
-        autoComplete="username"
-        autoFocus
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="confirmPassword"
-        label="Confirm Password"
-        name="confirmPassword"
-        autoFocus
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        name="email"
-        label="Email Address"
-        id="email"
-        autoComplete="email"
-      />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        注册
+        variant="outlined"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={emailEmpty}
+        onClick={onSendEmail}
+      >
+        发送验证码
       </Button>
     </Box>
   );
@@ -90,12 +150,7 @@ const RegisterView: React.FC<{}> = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            DD Helper
-          </Typography>
+          <img src={Logo} alt="" style={{ height: 80 }}/>
           <Typography component="h1" variant="h6">
             注册
           </Typography>

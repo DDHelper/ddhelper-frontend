@@ -1,23 +1,16 @@
-import React, {
-  Suspense,
-} from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
-import {
-  Grid,
-  Paper,
-} from "@mui/material";
-import Skeleton from "@mui/material/Skeleton";
-import AuthView from "./components/auth";
+import { BrowserRouter, Route, Switch, } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import Skeleton from '@mui/material/Skeleton';
+import AuthView from './components/auth';
 import RegisterView from './components/signup';
 import TemplatePageView from './components/template';
-import SearchView from './components/search';
+import MainrolllistPageView from './components/mainrolllist';
+import MainTimelinePageView from './components/maintimeline';
+import UserPageView from './components/user';
+import GroupingPageView from './components/grouping';
+import SearchPageView from './components/search';
 function App() {
   /*
   return (
@@ -64,7 +57,22 @@ function App() {
             <RegisterView />
           </Route>
           <Route path="/" exact>
-            <TemplatePageView />
+            <MainrolllistPageView />
+          </Route>
+          <Route path="/main" exact>
+            <MainrolllistPageView />
+          </Route>
+          <Route path="/timeline" exact>
+            <MainTimelinePageView />
+          </Route>
+          <Route path="/user" exact>
+            <UserPageView />
+          </Route>
+          <Route path="/usergrouping" exact>
+            <GroupingPageView />
+          </Route>
+          <Route path="/search" exact>
+            <SearchPageView />
           </Route>
           <Route path="/auth/search" exact>
             <SearchView/>
