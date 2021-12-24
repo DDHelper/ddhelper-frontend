@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { Md5 } from 'ts-md5/dist/md5';
 
-import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,7 +20,6 @@ import { UserApiReturn } from '../utils/apiModels';
 import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
 
 const theme = createTheme();
 const drawerWidth = 240;
@@ -78,7 +77,6 @@ const ChangePasswordFormWithHook: React.FC<{ email: string }> = (props) => {
   } = useForm();
   const { postChangePassword, postSendPin } = useApi();
   const history = useHistory();
-  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
   const onSubmit = async (data: any) => {
     let value = Object.assign(data, {});
@@ -98,11 +96,9 @@ const ChangePasswordFormWithHook: React.FC<{ email: string }> = (props) => {
 
   const onSendEmail = async () => {
     const values = serialize({ type: 'change_password' });
-    setButtonLoading(true);
     const response = await postSendPin(values);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
     else alert('已发送验证码');
-    setButtonLoading(false);
   };
 
   return (
@@ -145,9 +141,9 @@ const ChangePasswordFormWithHook: React.FC<{ email: string }> = (props) => {
           修改密码
         </Button>
       </Box>
-      <LoadingButton fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={onSendEmail} loading={buttonLoading}>
+      <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={onSendEmail}>
         发送验证码
-      </LoadingButton>
+      </Button>
     </Box>
   );
 };
@@ -180,28 +176,23 @@ const UserPageView: React.FC<{}> = () => {
         >
           <Toolbar />
           {loaded && (
-              <Grid container spacing={2}>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={6} md={7}>
-                  <UserContent code={userdata!.code} data={userdata!.data} />
-                  <Divider variant="middle" />
-                  <Card sx={{ minWidth: 275, my: 2}}>
-                    <CardContent>
-                      <Typography variant="h5" color="text.secondary" gutterBottom>
-                        修改密码
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={1}></Grid>
-                        <Grid item xs={7}>
-                          <ChangePasswordFormWithHook email={userdata!.data.email} />
-                        </Grid>
-                        <Grid item xs></Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                  <Grid item xs={3}></Grid>
-                </Grid>
-              </Grid>
+            <Box>
+              <UserContent code={userdata!.code} data={userdata!.data} />
+              <Divider variant="middle" />
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                  <Typography variant="h5" color="text.secondary" gutterBottom>
+                    修改密码
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                      <ChangePasswordFormWithHook email={userdata!.data.email} />
+                    </Grid>
+                    <Grid item xs={2}></Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Box>
           )}
         </Box>
       </Box>
