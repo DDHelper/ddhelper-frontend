@@ -44,6 +44,7 @@ function timestampToTime(timestamp: number) {
 }
 
 function timestampToDate(timestamp: number) {
+  // return object
   let date = new Date(timestamp * 1000); // timestamp 10 digits
   let Y = date.getFullYear();
   let M = date.getMonth() + 1 < 10 ? Number('0' + (date.getMonth() + 1)) : date.getMonth() + 1;
@@ -428,5 +429,20 @@ const MainTimelinePageView: React.FC<{}> = () => {
     </ThemeProvider>
   );
 };
+
+/*
+  groups.map({
+    <div>
+      <Tab />
+      <TabPanel>
+        <TimelineTree>
+          sortedData.map({
+            <#item/ >
+          })
+        </TimelineTree>
+      </TabPanel>
+    </div>
+  })
+*/
 
 export default MainTimelinePageView;
