@@ -13,6 +13,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -43,7 +44,7 @@ import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 type Order = 'asc' | 'desc';
 const NotSoEnhancedTable = (props: {
@@ -332,119 +333,122 @@ const SearchPageView: React.FC<{}> = () => {
           /* this is content */
         >
           <Toolbar />
-          <Typography variant="h5" sx={{ my: 1 }}>
-            搜索要订阅的创作者
-            <Divider sx={{ my: 1 }} />
-            <Box sx={{ my: 3, mx: 3 }}>
-              <Box sx={{ my: 2 }}>
-                <CustomizedInputBase />
-              </Box>
-              {loaded ? (
-                searching ? (
-                  <PageLoader />
-                ) : found ? (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      padding: 0,
-                    }}
-                  >
-                    <SimpleDialog
-                      selectedMid={selectedMid}
-                      groupList={groupListData!}
-                      open={open}
-                      buttonLoading={buttonLoading}
-                      onClose={handleClose}
-                      onConfirm={handleDoSubscribe}
-                    />
-                    <List
-                      sx={{
-                        width: '100%',
-                        maxWidth: 2000,
-                        boxShadow: 2,
-                        bgcolor: 'background.paper',
-                      }}
-                    >
-                      {searchData!.data.map((item, idx) => {
-                        return (
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar>
-                                <Avatar
-                                  variant="rounded"
-                                  src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
-                                />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemButton
-                              sx={{ mx: 1, my: 1, p: 2, position: 'absolute', left: '90%' }}
-                              onClick={(event) => handleClickOpen(event, item.mid)}
-                            >
-                              <AddIcon />
-                            </ListItemButton>
-                            <ListItemText
-                              primary={
-                                <Link
-                                  variant="subtitle2"
-                                  underline="hover"
-                                  color="inherit"
-                                  href={`https://space.bilibili.com/${item.mid}`}
+          <Grid container spacing={2} columns={{ xs: 6, sm: 8, md: 12 }}>
+            <Grid item xs={6} sm={8} md={12}>
+              <Typography variant="h5" sx={{ my: 1, minWidth: 500 }}>
+                搜索要订阅的创作者
+                <Divider sx={{ my: 1 }} />
+                <Box sx={{ my: 3, mx: 3 }}>
+                  <Box sx={{ my: 2 }}>
+                    <CustomizedInputBase />
+                  </Box>
+                  {loaded ? (
+                    searching ? (
+                      <PageLoader />
+                    ) : found ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          padding: 0,
+                        }}
+                      >
+                        <SimpleDialog
+                          selectedMid={selectedMid}
+                          groupList={groupListData!}
+                          open={open}
+                          buttonLoading={buttonLoading}
+                          onClose={handleClose}
+                          onConfirm={handleDoSubscribe}
+                        />
+                        <List
+                          sx={{
+                            width: '100%',
+                            maxWidth: 2000,
+                            boxShadow: 2,
+                            bgcolor: 'background.paper',
+                          }}
+                        >
+                          {searchData!.data.map((item, idx) => {
+                            return (
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar>
+                                    <Avatar
+                                      variant="rounded"
+                                      src={`http://ddd.edrows.top/txcos/pic/?url=${item.upic}@60w_60h.webp`}
+                                    />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemButton
+                                  sx={{ mx: 1, my: 1, p: 2, position: 'absolute', left: '90%' }}
+                                  onClick={(event) => handleClickOpen(event, item.mid)}
                                 >
-                                  {item.uname}
-                                </Link>
-                              }
-                              secondary={
-                                <React.Fragment>
-                                  <Typography
-                                    sx={{ display: 'inline' }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                  ></Typography>
-                                </React.Fragment>
-                              }
-                            />
-                            <ListItemText
-                              primary={`粉丝数 ${item.fans}`}
-                              secondary={
-                                <React.Fragment>
-                                  <Typography
-                                    sx={{ display: 'inline' }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                  >
-                                    uid {item.mid}
-                                  </Typography>
-                                </React.Fragment>
-                              }
-                              sx={{
-                                position: 'absolute',
-                                left: '50%',
-                              }}
-                            />
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </Box>
-                ) : (
-                  <Box>
-                    <Typography variant="h6" sx={{ mx: 8 }}>
-                      No Data
-                    </Typography>
-                    <Typography variant="subtitle2" sx={{ mx: 8 }}>
-                      未搜索到符合条件的创作者。
-                    </Typography>
-                  </Box>
-                )
-              ) : (
-                <div />
-              )}
-            </Box>
-          </Typography>
-
+                                  <AddIcon />
+                                </ListItemButton>
+                                <ListItemText
+                                  primary={
+                                    <Link
+                                      variant="subtitle2"
+                                      underline="hover"
+                                      color="inherit"
+                                      href={`https://space.bilibili.com/${item.mid}`}
+                                    >
+                                      {item.uname}
+                                    </Link>
+                                  }
+                                  secondary={
+                                    <React.Fragment>
+                                      <Typography
+                                        sx={{ display: 'inline' }}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                      ></Typography>
+                                    </React.Fragment>
+                                  }
+                                />
+                                <ListItemText
+                                  primary={`粉丝数 ${item.fans}`}
+                                  secondary={
+                                    <React.Fragment>
+                                      <Typography
+                                        sx={{ display: 'inline' }}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                      >
+                                        uid {item.mid}
+                                      </Typography>
+                                    </React.Fragment>
+                                  }
+                                  sx={{
+                                    position: 'absolute',
+                                    left: '50%',
+                                  }}
+                                />
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      </Box>
+                    ) : (
+                      <Box>
+                        <Typography variant="h6" sx={{ mx: 8 }}>
+                          No Data
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ mx: 8 }}>
+                          未搜索到符合条件的创作者。
+                        </Typography>
+                      </Box>
+                    )
+                  ) : (
+                    <div />
+                  )}
+                </Box>
+              </Typography>
+            </Grid>
+          </Grid>
           <Divider />
         </Box>
       </Box>

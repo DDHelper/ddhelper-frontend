@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const UserContent: React.FC<UserApiReturn> = (props) => {
   return (
@@ -180,9 +180,9 @@ const UserPageView: React.FC<{}> = () => {
         >
           <Toolbar />
           {loaded && (
-              <Grid container spacing={2}>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={6} md={7}>
+              <Grid container spacing={2} columns={{ xs: 6, sm: 8, md: 12 }}>
+                <Grid item xs={1} sm={1} md={1}></Grid>
+                <Grid item xs={6} sm={7} md={7}>
                   <UserContent code={userdata!.code} data={userdata!.data} />
                   <Divider variant="middle" />
                   <Card sx={{ minWidth: 275, my: 2}}>
@@ -199,7 +199,7 @@ const UserPageView: React.FC<{}> = () => {
                       </Grid>
                     </CardContent>
                   </Card>
-                  <Grid item xs={3}></Grid>
+                  <Grid item xs></Grid>
                 </Grid>
               </Grid>
           )}

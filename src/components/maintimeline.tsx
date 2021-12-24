@@ -30,7 +30,7 @@ import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 function timestampToTime(timestamp: number) {
   let date = new Date(timestamp * 1000); // timestamp 10 digits

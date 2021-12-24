@@ -10,7 +10,7 @@ import PageHeader from './parts/header';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const TemplatePageView: React.FC<{}> = () => {
   // this is a common comment.

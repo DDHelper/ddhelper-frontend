@@ -31,7 +31,7 @@ import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 function timestampToTime(timestamp: number) {
   let date = new Date(timestamp * 1000); //timestamp 为10位需*1000，timestamp 为13位的话不需乘1000
@@ -117,8 +117,8 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
           return <Tab label={item.group_name} {...a11yProps(idx)} key={idx} value={idx} wrapped />;
         })}
       </Tabs>
-      <Grid container spacing={2}>
-        <Grid item xs={6} md={10}>
+      <Grid container spacing={2} columns={{ xs: 6, sm: 8, md: 12 }}>
+        <Grid item xs={6} sm={8} md={10}>
           {props.data.map((item, idx) => {
             const group = props.data.find((i) => i.gid === item.gid)!;
             return (
@@ -128,7 +128,7 @@ const VerticalTabs: React.FC<GroupListApiReturn> = (props) => {
             );
           })}
         </Grid>
-        <Grid item xs={2}></Grid>
+        <Grid item xs></Grid>
       </Grid>
     </Box>
   );
@@ -557,7 +557,7 @@ const MainrolllistPageView: React.FC<{}> = () => {
         <PageSider drawerWidth={drawerWidth} />
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3 }}
+          sx={{ flexGrow: 1, p: 3}}
           /* this is content */
         >
           <Toolbar />

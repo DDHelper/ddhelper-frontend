@@ -21,7 +21,7 @@ import PageLoader from './parts/loader';
 import PageSider from './parts/sider';
 
 const theme = createTheme();
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -249,9 +249,9 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
           );
         })}
       </Tabs>
-      <Grid container spacing={2}>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={6} md={7}>
+      <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Grid item xs={1} sm={1} md={1}></Grid>
+        <Grid item xs={6} sm={7} md={7}>
           {props.data.map((item, idx) => {
             const rows = props.details.find((i) => i.gid === item.gid)!.data;
             return (
@@ -263,7 +263,7 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
             );
           })}
         </Grid>
-        <Grid item xs={2}></Grid>
+        <Grid item xs></Grid>
       </Grid>
     </Box>
   );
