@@ -183,7 +183,6 @@ export interface SimpleDialogProps {
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
-  //单击按钮弹出对话框
   const { onClose, onConfirm, buttonLoading, selectedMid, groupList, open } = props;
   const [selectedGids, setSelectedGids] = React.useState<number[]>([]);
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -311,12 +310,10 @@ const SearchPageView: React.FC<{}> = () => {
           <SearchIcon />
         </IconButton>
       </Box>
-      //搜索栏
     );
   }
 
   return (
-    //整个搜索框的组成
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />

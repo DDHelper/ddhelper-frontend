@@ -21,19 +21,16 @@ import { LoginValues } from '../utils/apiModels';
 const theme = createTheme();
 
 const LoginFormWithHook: React.FC<{}> = () => {
-  //登录页面
   const { handleSubmit, register, control } = useForm();
   const { postLogin } = useApi();
   const history = useHistory();
 
   const onSubmit = async (data: LoginValues) => {
     let value = Object.assign(data, {});
-    value.password = Md5.hashStr('DdHe1p0er' + value.password);//用md5码对密码进行加密，防止被窃听
-
+    value.password = Md5.hashStr('DdHe1p0er' + value.password);
     const formData = serialize(value);
     const response = await postLogin(formData);
     if (response.code !== 200) alert(`操作失败: ${response.msg}`);
-    //若密码正确则显示'登录成功'，且直接进入主信息页面(也就是动态展示页面)
     else {
       alert('登录成功');
       history.push({
@@ -74,8 +71,6 @@ const LoginFormWithHook: React.FC<{}> = () => {
       >
         登录
       </Button>
-      {//点击登录
-      }
       <Grid container>
         <Grid item xs>
           {
@@ -85,9 +80,6 @@ const LoginFormWithHook: React.FC<{}> = () => {
           }
         </Grid>
         <Grid item>
-          {
-            //尚未注册
-          }
           <Link href="/auth/register" variant="body2">
             注册
           </Link>
