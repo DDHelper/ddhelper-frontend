@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import { useApi } from '../../utils/apiClient';
 
 const PageHeader: React.FC<{}> = () => {
+  //页面上方快捷访问栏
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -123,14 +124,23 @@ const PageHeader: React.FC<{}> = () => {
           >
             DD Helper
           </Typography>
+          {
+            //logo
+          }
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Button href="/auth/login" variant="contained" disableElevation>
               登录
             </Button>
+            {
+              //登陆按钮
+            }
             <Button href="/auth/register" variant="contained" disableElevation>
               注册
             </Button>
+            {
+              //注册按钮
+            }
             <IconButton
               size="large"
               edge="end"

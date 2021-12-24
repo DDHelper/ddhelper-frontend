@@ -51,27 +51,48 @@ function App() {
           }
         >
           <Route path="/auth/login" exact>
+            {
+              //登陆页面
+            }
             <AuthView />
           </Route>
           <Route path="/auth/register" exact>
+            {
+              //注册页面
+            }
             <RegisterView />
           </Route>
           <Route path="/" exact>
             <MainrolllistPageView />
           </Route>
           <Route path="/main" exact>
+            {
+              //动态展示页面
+            }
             <MainrolllistPageView />
           </Route>
           <Route path="/timeline" exact>
+            {
+              //日历时间轴页面
+            }
             <MainTimelinePageView />
           </Route>
           <Route path="/user" exact>
+            {
+              //用户信息页面
+            }
             <UserPageView />
           </Route>
           <Route path="/usergrouping" exact>
+            {
+              //分组管理页面
+            }
             <GroupingPageView />
           </Route>
           <Route path="/search" exact>
+            {
+              //搜索页面
+            }
             <SearchPageView />
           </Route>
         </Suspense>

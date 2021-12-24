@@ -25,6 +25,8 @@ const theme = createTheme();
 const drawerWidth = 240;
 
 const UserContent: React.FC<UserApiReturn> = (props) => {
+  //用户信息
+  
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
@@ -149,6 +151,7 @@ const ChangePasswordFormWithHook: React.FC<{ email: string }> = (props) => {
 };
 
 const UserPageView: React.FC<{}> = () => {
+  //用户信息界面
   const { getUserInfo } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [userdata, setUserdata] = useState<UserApiReturn>();

@@ -21,6 +21,7 @@ import { RegisterValues } from '../utils/apiModels';
 const theme = createTheme();
 
 const RegisterFormWithHook: React.FC<{}> = () => {
+  //注册页面
   const {
     handleSubmit,
     register,
@@ -35,9 +36,11 @@ const RegisterFormWithHook: React.FC<{}> = () => {
     const email = e.target.value;
     if (email !== undefined && email !== '') setEmailEmpty(false);
     else setEmailEmpty(true);
+    //检查邮箱是否为空
   };
 
   const onSubmit = async (data: RegisterValues) => {
+    //密码和验证码都用md5码进行加密
     let value = Object.assign(data, {});
     value.password = Md5.hashStr('DdHe1p0er' + value.password);
     value.confirmPassword = Md5.hashStr('DdHe1p0er' + value.confirmPassword);
@@ -54,6 +57,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
   };
 
   const onSendEmail = async () => {
+    //发送验证码
     let value = { email: await getValues('email') };
     const formData = serialize(value);
     const response = await postSendPin(formData);
@@ -71,6 +75,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
           id="username"
           label="用户名"
           autoComplete="username"
+          //输入自动补全
           autoFocus
           {...register('username', { required: true })}
         />
@@ -125,6 +130,7 @@ const RegisterFormWithHook: React.FC<{}> = () => {
         </Button>
       </Box>
       <Button
+      //点击发送验证码
         fullWidth
         variant="outlined"
         sx={{ mt: 3, mb: 2 }}

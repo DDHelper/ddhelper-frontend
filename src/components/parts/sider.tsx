@@ -18,6 +18,7 @@ interface props {
   drawerWidth: number;
 }
 const PageSider: React.FC<props> = (props) => {
+  //页面左侧快捷访问栏
   return (
     <Drawer
       variant="permanent"
@@ -55,6 +56,9 @@ const PageSider: React.FC<props> = (props) => {
                 <PeopleOutlineIcon />
               </ListItemIcon>
               <ListItemText primary="分组管理" />
+              {
+                //单击打开分组管理页面
+              }
             </ListItem>
           </Link>
           <Link href="/search" underline="none">
@@ -63,6 +67,9 @@ const PageSider: React.FC<props> = (props) => {
                 <SearchOutlineIcon />
               </ListItemIcon>
               <ListItemText primary="搜索订阅" />
+              {
+                //单击打开搜索订阅页面
+              }
             </ListItem>
           </Link>
         </List>
