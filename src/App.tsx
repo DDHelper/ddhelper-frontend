@@ -74,6 +74,9 @@ function App() {
           <Route path="/search" exact>
             <SearchPageView />
           </Route>
+          <Route path="/auth/search" exact>
+            <SearchView/>
+          </Route>
         </Suspense>
       </Switch>
     </BrowserRouter>
