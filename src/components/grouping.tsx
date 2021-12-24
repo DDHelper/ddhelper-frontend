@@ -270,11 +270,6 @@ const VerticalTabs: React.FC<GroupingData> = (props) => {
 };
 
 const GroupingPageView: React.FC<{}> = () => {
-  /*
-    groups.map({<Tab>
-    {items.map({<box />})}
-    </Tab>})
-  */
   const { getGroupList, getGroupMember } = useApi();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [groupListData, setGroupListData] = useState<GroupListApiReturn>();
@@ -329,5 +324,16 @@ const GroupingPageView: React.FC<{}> = () => {
     </ThemeProvider>
   );
 };
+
+/*
+  groups.map({
+    <div>
+      <Tab />
+      <TabPanel>
+        <EnhancedTable />
+      </TabPanel>
+    </div>
+  })
+*/
 
 export default GroupingPageView;

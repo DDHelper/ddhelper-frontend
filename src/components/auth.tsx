@@ -96,6 +96,8 @@ const LoginFormWithHook: React.FC<{}> = () => {
 };
 
 const AuthView: React.FC<{}> = () => {
+  // TODO: find new logo
+  // TODO: find entrance pic
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
